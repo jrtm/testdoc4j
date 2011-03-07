@@ -1,0 +1,37 @@
+== TestDoc4J
+
+Documentation generator for manual non-technical testers. 
+
+== Installation
+
+    $ git clone 
+    $ mvn package
+
+== Usage
+
+1. Add annotation to your testscode describing in plain langauge what the tests do.  
+
+
+    package no.uio.tools.testdoc.examples;
+
+    import no.uio.tools.testdoc.TestDocPlan;
+    import no.uio.tools.testdoc.TestDocTask;
+    import no.uio.tools.testdoc.TestDocTasks;
+    import no.uio.tools.testdoc.TestDocTest;
+
+    @TestDocPlan("Authentication tests")
+    public class BasicExample {
+
+    @TestDocTest("Test user login")
+    @TestDocTasks({ @TestDocTask(task = "Go to login page", checks = "Check 1") })
+    public void testUserLogin() {
+        // Testcode here
+        assert (true);
+    }
+
+    }
+
+2. Run TestDoc from the command line:  
+  
+ java -cp ~/.m2/repository/freemarker/freemarker/2.3.8/freemarker-2.3.8.jar:target/testdoc.jar no.uio.tools.testdoc.main.GenerateTestDoc target/testdoc.jar no.uio.tools
+
