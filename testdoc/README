@@ -1,0 +1,9 @@
+== TestDoc4J
+
+Documentation generator for manual non-technical testers. 
+
+== Usage
+Example usage:
+  
+ java -cp ~/.m2/repository/freemarker/freemarker/2.3.8/freemarker-2.3.8.jar:target/testdoc.jar no.uio.tools.testdoc.main.GenerateTestDoc target/testdoc.jar no.uio.tools
+
