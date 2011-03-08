@@ -1,4 +1,4 @@
-package no.uio.tools.testdoc;
+package no.uio.tools.testdoc.annotations;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
@@ -7,8 +7,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 @Retention(RUNTIME)
-@Target(ElementType.METHOD)
-public @interface TestDocTest {
+@Target(ElementType.TYPE)
+public @interface TestDocPlan {
 
     String value();
 }

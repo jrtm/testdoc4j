@@ -1,9 +1,9 @@
 package no.uio.tools.testdoc.examples;
 
-import no.uio.tools.testdoc.TestDocPlan;
-import no.uio.tools.testdoc.TestDocTask;
-import no.uio.tools.testdoc.TestDocTasks;
-import no.uio.tools.testdoc.TestDocTest;
+import no.uio.tools.testdoc.annotations.TestDocPlan;
+import no.uio.tools.testdoc.annotations.TestDocTask;
+import no.uio.tools.testdoc.annotations.TestDocTasks;
+import no.uio.tools.testdoc.annotations.TestDocTest;
 
 @TestDocPlan("Authentication tests")
 public class BasicExample {

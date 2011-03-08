@@ -3,13 +3,13 @@ package no.uio.tools.testdoc.main;
 import java.lang.reflect.Method;
 import java.util.LinkedList;
 
-import no.uio.tools.testdoc.TestDocPlan;
-import no.uio.tools.testdoc.TestDocPlanData;
-import no.uio.tools.testdoc.TestDocTask;
-import no.uio.tools.testdoc.TestDocTaskData;
-import no.uio.tools.testdoc.TestDocTasks;
-import no.uio.tools.testdoc.TestDocTest;
-import no.uio.tools.testdoc.TestDocTestData;
+import no.uio.tools.testdoc.annotations.TestDocPlan;
+import no.uio.tools.testdoc.annotations.TestDocTask;
+import no.uio.tools.testdoc.annotations.TestDocTasks;
+import no.uio.tools.testdoc.annotations.TestDocTest;
+import no.uio.tools.testdoc.data.TestDocPlanData;
+import no.uio.tools.testdoc.data.TestDocTaskData;
+import no.uio.tools.testdoc.data.TestDocTestData;
 
 public class AnnotationsScanner {
 

@@ -10,7 +10,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import no.uio.tools.testdoc.TestDocPlanData;
+import no.uio.tools.testdoc.data.TestDocPlanData;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;

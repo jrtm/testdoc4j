@@ -14,9 +14,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import no.uio.tools.testdoc.TestDocPlanData;
-import no.uio.tools.testdoc.TestDocTaskData;
-import no.uio.tools.testdoc.TestDocTestData;
+import no.uio.tools.testdoc.data.TestDocPlanData;
+import no.uio.tools.testdoc.data.TestDocTaskData;
+import no.uio.tools.testdoc.data.TestDocTestData;
 import no.uio.tools.testdoc.main.AnnotationsScanner;
 
 import freemarker.template.Configuration;

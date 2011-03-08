@@ -1,4 +1,4 @@
-package no.uio.tools.testdoc;
+package no.uio.tools.testdoc.data;
 
 import java.util.LinkedList;
 
