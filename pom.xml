@@ -15,7 +15,6 @@
 		<relativePath>./usit-parent-pom/usit-parent-pom.xml</relativePath>
 	</parent>
 
-
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
