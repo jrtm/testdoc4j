@@ -1,14 +1,13 @@
 package no.uio.tools.testdoc.examples;
 
+import static org.junit.Assert.assertTrue;
+
 import no.uio.tools.testdoc.annotations.TestDocPlan;
 import no.uio.tools.testdoc.annotations.TestDocTask;
-import no.uio.tools.testdoc.annotations.TestDocTaskBlock;
 import no.uio.tools.testdoc.annotations.TestDocTasks;
 import no.uio.tools.testdoc.annotations.TestDocTest;
 
 import org.junit.Test;
-
-import static org.junit.Assert.assertTrue;
 
 @TestDocPlan("Advanced tests")
 public class AdvancedExample {
@@ -38,12 +37,10 @@ public class AdvancedExample {
 
     @Test
     @TestDocTest("Test search- and detailspage")
-    @TestDocTasks(blocks = {
-            @TestDocTaskBlock(description = "Test searchpage", tests = {
-                    @TestDocTask(task = "Go to search page", checks = "Searchform is present"),
-                    @TestDocTask(task = "Search for 'uio'", checks = { "See that you get 4 searchresults",
-                            "See that 'usit' is one of the searchresults" }) }),
-            @TestDocTaskBlock(description = "Test detailspage", tests = { @TestDocTask(task = "Click the link 'usit' in the searchresults", checks = "See that the heading of the page is 'USIT'") }) })
+    @TestDocTasks({
+            @TestDocTask(task = "Go to search page", checks = "Searchform is present"),
+            @TestDocTask(task = "Search for 'uio'", checks = { "See that you get 4 searchresults",
+                    "See that 'usit' is one of the searchresults" }) })
     public void search() {
         assertTrue(true);
     }
