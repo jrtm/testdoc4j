@@ -17,8 +17,6 @@ import java.util.List;
 import no.uio.tools.testdoc.data.TestDocPlanData;
 import no.uio.tools.testdoc.data.TestDocTaskData;
 import no.uio.tools.testdoc.data.TestDocTestData;
-import no.uio.tools.testdoc.main.AnnotationsScanner;
-
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -59,7 +57,7 @@ public class ClassScanner {
         for (Iterator<Class> iterator = classes.iterator(); iterator.hasNext();) {
             String className = iterator.next().getName();
             System.out.println("Scanning: " + className);
-            TestDocPlanData testDocPlanData = AnnotationsScanner.getAnnotationsFromClass(className);
+            TestDocPlanData testDocPlanData = null; // AnnotationsScanner.getAnnotationsFromClass(className);
             if (testDocPlanData != null) {
                 System.out.println("Reading: " + className);
                 testplans.add(testDocPlanData);

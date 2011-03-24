@@ -3,21 +3,95 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>no.uio.tools</groupId>
 	<artifactId>testdoc</artifactId>
-	<packaging>jar</packaging>
+	<!-- <packaging>jar</packaging> -->
+	<packaging>maven-plugin</packaging>
+
 	<version>0.0.1-SNAPSHOT</version>
 	<name>testdoc</name>
 	<url>http://maven.apache.org</url>
 
-	<parent>
-		<groupId>no.uio.usit</groupId>
-		<artifactId>usit-parent-pom</artifactId>
-		<version>1.0.3</version>
-		<relativePath>./usit-parent-pom/usit-parent-pom.xml</relativePath>
-	</parent>
-
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
+
+	<repositories>
+
+		<repository>
+			<id>reflections-repo</id>
+			<name>Reflections Maven2 Repository</name>
+			<url>http://reflections.googlecode.com/svn/repo</url>
+		</repository>
+
+		<repository>
+			<id>nexus-public</id>
+			<url>https://repo.usit.uio.no/nexus/content/groups/public/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<updatePolicy>always</updatePolicy>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+
+		<repository>
+			<id>nexus-internal</id>
+			<url>https://repo.usit.uio.no/nexus/content/groups/internal/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<updatePolicy>always</updatePolicy>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+
+	</repositories>
+
+
+	<pluginRepositories>
+
+		<pluginRepository>
+			<id>nexus-internal</id>
+			<url>https://repo.usit.uio.no/nexus/content/groups/internal/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+
+		<pluginRepository>
+			<id>nexus-public</id>
+			<url>https://repo.usit.uio.no/nexus/content/groups/public/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+
+	</pluginRepositories>
+
+
+	<distributionManagement>
+		<site>
+			<id>repo.usit.uio.no</id>
+			<url>scpexe://repo.usit.uio.no/www/var/virtual/no.uio.utv_80/htdocs/maven-sites/${project.artifactId}</url>
+		</site>
+		<repository>
+			<id>repo.usit.uio.no</id>
+			<url>scpexe://repo.usit.uio.no/www/var/data/nexus/work/storage/internal-release</url>
+		</repository>
+		<snapshotRepository>
+			<id>repo.usit.uio.no</id>
+			<url>scpexe://repo.usit.uio.no/www/var/data/nexus/work/storage/internal-snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+
 
 	<dependencies>
 
@@ -28,10 +102,41 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.reflections</groupId>
+			<artifactId>reflections</artifactId>
+			<version>0.9.5-RC2</version>
+		</dependency>
+
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.8.2</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-plugin-api</artifactId>
+			<version>2.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.maven.reporting</groupId>
+			<artifactId>maven-reporting-api</artifactId>
+			<version>2.0.8</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.maven.reporting</groupId>
+			<artifactId>maven-reporting-impl</artifactId>
+			<version>2.0.4.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.codehaus.plexus</groupId>
+			<artifactId>plexus-utils</artifactId>
+			<version>2.0.1</version>
+		</dependency>
+
 	</dependencies>
 
 

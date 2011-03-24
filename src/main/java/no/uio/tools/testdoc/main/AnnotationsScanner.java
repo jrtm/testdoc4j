@@ -13,19 +13,30 @@ import no.uio.tools.testdoc.data.TestDocTestData;
 
 public class AnnotationsScanner {
 
-    public static TestDocPlanData getAnnotationsFromClass(String className) throws ClassNotFoundException {
+    public static TestDocPlanData getAnnotationsFromClass(Class clazz) {
         TestDocPlanData testDocPlanData = new TestDocPlanData();
         LinkedList<TestDocTestData> testsList = new LinkedList<TestDocTestData>();
-        TestDocPlan testdocPlan = (TestDocPlan) Class.forName(className).getAnnotation(TestDocPlan.class);
+        TestDocPlan testdocPlan = (TestDocPlan) clazz.getAnnotation(TestDocPlan.class);
         if (testdocPlan != null && testdocPlan.value() != null) {
             testDocPlanData.setTitle(testdocPlan.value());
-            testDocPlanData.setClassName(className);
+            testDocPlanData.setClassName(clazz.getName());
         } else {
             testDocPlanData.setTitle(null);
         }
 
         int testsCount = 0;
-        for (Method m : Class.forName(className).getMethods()) {
+
+        Method[] methods = null;
+        try {
+            methods = clazz.getMethods();
+        } catch (NoClassDefFoundError e) {
+            // TODO: handle exception
+        }
+        if (methods == null) {
+            return null;
+        }
+
+        for (Method m : methods) {
             TestDocTestData testDocTestData = new TestDocTestData();
 
             TestDocTest testDocTest = (TestDocTest) m.getAnnotation(TestDocTest.class);
@@ -58,13 +69,13 @@ public class AnnotationsScanner {
             if (testDocTestData.getTitle() != null || testDocTestData.getTasks() != null) {
                 testsCount = testsCount + 1;
                 testDocTestData.setNumber(testsCount);
-                testDocPlanData.setClassName(className);
+                testDocPlanData.setClassName(clazz.getName());
                 testsList.add(testDocTestData);
             }
         }
         if (testsList.size() > 0) {
             testDocPlanData.setTests(testsList);
-            testDocPlanData.setClassName(className);
+            testDocPlanData.setClassName(clazz.getName());
         }
         if (testDocPlanData.getTitle() == null && testDocPlanData.getTests() == null) {
             return null;

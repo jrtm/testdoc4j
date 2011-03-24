@@ -15,52 +15,26 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
-/**
- * Example usage:
- * 
- * java -cp ~/.m2/repository/freemarker/freemarker/2.3.8/freemarker-2.3.8.jar:target/testdoc.jar
- * no.uio.tools.testdoc.main.GenerateTestDoc target/testdoc.jar no.uio.tools
- * 
- * @author thomasfl
- * 
- */
 public class GenerateTestDoc {
 
     public static boolean debug = false;
 
 
-    public static void main(String[] args) throws ClassNotFoundException, IOException, TemplateException {
-        String jarName = "";
-        if (args.length == 0) {
-            System.out.println("usage: testdoc source.jar [package]");
-            System.exit(-1);
-        } else {
-            jarName = args[0];
-        }
-
-        System.out.println("Searching for TestDoc annotations in file: " + jarName);
-
-        String packageName = ""; // no.uio.tools.testdoc";
-        if (args.length > 1) {
-            packageName = args[1];
-            System.out.println("Filter package: " + packageName);
-        }
-
-        String output = generateTestDoc(jarName, packageName);
-        // System.out.println(output);
-        System.out.println("\nWriting documentation to: 'testplan.html'");
-        writeFile("testplan.html", output);
-    }
-
-
-    public static String generateTestDoc(String jarName, String packageName) throws ClassNotFoundException,
-            IOException, TemplateException {
-        List classes = JarScanner.getClasseNamesInPackage(jarName, packageName);
+    public static String generateTestDocForClasses(List<Class> classes) throws ClassNotFoundException, IOException,
+            TemplateException {
         HashMap<String, LinkedList<TestDocPlanData>> datamodel = scanClasses(classes);
         String output = processFreemarkerTemplate(datamodel, "testdoc.ftl");
         return output;
     }
 
+
+    // public static String generateTestDoc(String jarName, String packageName) throws ClassNotFoundException,
+    // IOException, TemplateException {
+    // List<Class> classes = JarScanner.getClassesInPackage(jarName, packageName);
+    // HashMap<String, LinkedList<TestDocPlanData>> datamodel = scanClasses(classes);
+    // String output = processFreemarkerTemplate(datamodel, "testdoc.ftl");
+    // return output;
+    // }
 
     @SuppressWarnings("rawtypes")
     public static HashMap<String, LinkedList<TestDocPlanData>> scanClasses(List classes) throws ClassNotFoundException,
@@ -69,12 +43,14 @@ public class GenerateTestDoc {
         HashMap<String, LinkedList<TestDocPlanData>> datamodel = new HashMap<String, LinkedList<TestDocPlanData>>();
         LinkedList<TestDocPlanData> testplans = new LinkedList<TestDocPlanData>();
 
-        for (Iterator<String> iterator = classes.iterator(); iterator.hasNext();) {
-            String className = iterator.next().replaceAll(".class$", ""); // .getName();
+        for (Iterator<Class> iterator = classes.iterator(); iterator.hasNext();) {
+            Class clazz = (Class) iterator.next();
+            // String className = iterator.next().replaceAll(".class$", ""); // .getName();
+            String className = clazz.getName();
             if (debug == true) {
                 System.out.println("Scanning: " + className);
             }
-            TestDocPlanData testDocPlanData = AnnotationsScanner.getAnnotationsFromClass(className);
+            TestDocPlanData testDocPlanData = AnnotationsScanner.getAnnotationsFromClass(clazz); // className);
             if (testDocPlanData != null) {
                 System.out.println("Reading: " + className);
                 testplans.add(testDocPlanData);
@@ -104,7 +80,7 @@ public class GenerateTestDoc {
         cfg.setClassForTemplateLoading(classLoader.getClass(), "/");
 
         if (debug) {
-            File dir = new File("/Users/thomasfl/workspace/testdoc/src/main/resources/");
+            File dir = new File("/Users/thomasfl/workspace/w3-testdoc/src/main/resources/");
             cfg.setDirectoryForTemplateLoading(dir);
         }
         cfg.setLocalizedLookup(false);
