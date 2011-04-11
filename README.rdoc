@@ -4,8 +4,12 @@ Documentation generator for manual non-technical testers.
 
 == Installation
 
-    $ git clone 
+    $ git clone git@github.com:thomasfl/testdoc_java.git
     $ mvn package
+    
+To deploy jar to a nexus repository 
+    
+    $ mvn deploy
 
 == Usage
 
@@ -31,7 +35,8 @@ Documentation generator for manual non-technical testers.
 
     }
 
-2. Run TestDoc from the command line:  
-  
- java -cp ~/.m2/repository/freemarker/freemarker/2.3.8/freemarker-2.3.8.jar:target/testdoc.jar no.uio.tools.testdoc.main.GenerateTestDoc target/testdoc.jar no.uio.tools
+2. Run maven site
 
+    $ mvn site
+    
+3. View HTML report in target/site/testdoc/

@@ -1,16 +1,24 @@
 package no.uio.tools.testdoc.main;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import no.uio.tools.testdoc.data.TestDocPlanData;
+
+import org.apache.commons.io.FileUtils;
+
+import freemarker.cache.ClassTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -77,14 +85,23 @@ public class GenerateTestDoc {
 
         Configuration cfg = new Configuration();
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        cfg.setClassForTemplateLoading(classLoader.getClass(), "/");
+
+        cfg.setClassForTemplateLoading(classLoader.getClass(), "");
+
+        ClassTemplateLoader ctl = new ClassTemplateLoader(classLoader.getClass(), "/");
+        cfg.setTemplateLoader(ctl);
 
         if (debug) {
-            File dir = new File("/Users/thomasfl/workspace/w3-testdoc/src/main/resources/");
-            cfg.setDirectoryForTemplateLoading(dir);
+            // File dir = new File("/Users/thomasfl/workspace/w3-testdoc/src/main/resources/");
+            // cfg.setDirectoryForTemplateLoading(dir);
         }
         cfg.setLocalizedLookup(false);
-        Template tpl = cfg.getTemplate(template);
+
+        String templateText = readTextFromJar("/" + template);
+        // System.out.println(markup);
+        Template tpl = new Template(template, new StringReader(templateText), cfg);
+
+        // Template tpl = cfg.getTemplate("/" + template);
 
         tpl.process(datamodel, output);
         return output.toString();
@@ -99,6 +116,41 @@ public class GenerateTestDoc {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+
+    /* Reads template text from jar file. */
+    public static String readTextFromJar(String s) {
+        InputStream is = null;
+        BufferedReader br = null;
+        String line;
+        ArrayList<String> list = new ArrayList<String>();
+
+        try {
+            is = FileUtils.class.getResourceAsStream(s);
+            br = new BufferedReader(new InputStreamReader(is));
+            while (null != (line = br.readLine())) {
+                list.add(line);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (br != null)
+                    br.close();
+                if (is != null)
+                    is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        String retVal = "";
+        Iterator it = list.iterator();
+        while (it.hasNext()) {
+            retVal = retVal + (String) it.next();
+
+        }
+        return retVal;
     }
 
 }

@@ -1,6 +1,8 @@
 package no.uio.tools.testdoc.main;
 
+import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -29,6 +31,19 @@ public class ReflectionsScanner {
             classPath = classPath + ":" + urls[i].getFile();
         }
         return classPath;
+    }
+
+
+    /* Add path to classpath at runtime */
+    public static void addPath(String s) throws Exception {
+        File f = new File(s);
+        @SuppressWarnings("deprecation")
+        URL u = f.toURL();
+        URLClassLoader urlClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+        Class urlClass = URLClassLoader.class;
+        Method method = urlClass.getDeclaredMethod("addURL", new Class[] { URL.class });
+        method.setAccessible(true);
+        method.invoke(urlClassLoader, new Object[] { u });
     }
 
 

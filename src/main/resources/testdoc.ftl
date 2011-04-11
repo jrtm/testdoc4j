@@ -1,4 +1,4 @@
-<#include "/header.ftl">
+<#-- include "/header.ftl" -->
 
 <#if testplans?exists>
 <#list testplans as testplan>
@@ -72,4 +72,4 @@
 
 </#if>
 
-<#include "/footer.ftl">
+<#-- include "/footer.ftl" -->
