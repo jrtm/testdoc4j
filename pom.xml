@@ -1,5 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	
+	<parent>
+		<groupId>no.uio.usit</groupId>
+		<artifactId>usit-parent-pom</artifactId>
+		<version>1.0.3</version>
+		<relativePath>./usit-parent-pom/usit-parent-pom.xml</relativePath>
+	</parent>
+	
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>no.uio.tools</groupId>
 	<artifactId>testdoc</artifactId>
@@ -21,7 +29,7 @@
 			<name>Reflections Maven2 Repository</name>
 			<url>http://reflections.googlecode.com/svn/repo</url>
 		</repository>
-
+<!--
 		<repository>
 			<id>nexus-public</id>
 			<url>https://repo.usit.uio.no/nexus/content/groups/public/</url>
@@ -45,10 +53,10 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</repository>
-
+-->
 	</repositories>
 
-
+<!--
 	<pluginRepositories>
 
 		<pluginRepository>
@@ -75,7 +83,6 @@
 
 	</pluginRepositories>
 
-
 	<distributionManagement>
 		<site>
 			<id>repo.usit.uio.no</id>
@@ -90,7 +97,7 @@
 			<url>scpexe://repo.usit.uio.no/www/var/data/nexus/work/storage/internal-snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
-
+-->
 
 
 	<dependencies>
@@ -149,6 +156,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
 				<configuration>
 					<source>1.5</source>
 					<target>1.5</target>
@@ -169,7 +177,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.1</version>
+				<version>2.2.1</version>
 				<configuration>
 					<descriptors>
 						<descriptor>src/assembly/client.xml</descriptor>
@@ -184,6 +192,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
+				<version>2.1.2</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -205,5 +214,7 @@
 		</extensions>
 
 	</build>
+
+
 
 </project>
