@@ -21,8 +21,7 @@ public class AdvancedExample {
     @TestDocTasks({ @TestDocTask(task = "Go to login page", checks = "Everything looks ok"),
             @TestDocTask(task = "Type wrong password", checks = { "See error message", "Check2" }) })
     public void userLogin() {
-        int i = 10;
-        i = i + 2;
+        assertTrue(true);
     }
 
 

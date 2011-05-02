@@ -112,6 +112,15 @@
 			<groupId>org.reflections</groupId>
 			<artifactId>reflections</artifactId>
 			<version>0.9.5-RC2</version>
+                        <!-- Må excludere denne pga avhengighet til slf4j-api som skaper problemer ved kjeøring av meldeapp
+                            Se http://code.google.com/p/reflections/issues/detail?id=55
+                        -->
+			<exclusions>
+                             <exclusion>
+                            <groupId>ch.qos.logback</groupId>
+                            <artifactId>logback-classic</artifactId>
+                            </exclusion>
+			  </exclusions>
 		</dependency>
 
 		<dependency>
