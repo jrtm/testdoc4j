@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>no.uio.usit</groupId>
 		<artifactId>usit-parent-pom</artifactId>
-		<version>1.0.3</version>
+		<version>1.0.4-SNAPSHOT</version>
 		<relativePath>./usit-parent-pom/usit-parent-pom.xml</relativePath>
 	</parent>
 	
@@ -213,15 +213,15 @@
 			</plugin>
 
 		</plugins>
-<!--
+
 		<extensions>
 			<extension>
 				<groupId>org.apache.maven.wagon</groupId>
 				<artifactId>wagon-ssh-external</artifactId>
-				<version>1.0-beta-6</version>
+				<version>1.0-beta-7</version>
 			</extension>
 		</extensions>
--->
+
 	</build>
 
 
