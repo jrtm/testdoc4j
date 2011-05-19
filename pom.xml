@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>no.uio.usit</groupId>
 		<artifactId>usit-parent-pom</artifactId>
-		<version>1.0.4-SNAPSHOT</version>
+		<version>1.0.4</version>
 		<relativePath>./usit-parent-pom/usit-parent-pom.xml</relativePath>
 	</parent>
 	
