@@ -25,11 +25,12 @@ import freemarker.template.TemplateException;
 
 public class GenerateTestDoc {
 
-    public static boolean debug = false;
+    public static boolean debug = true;
 
 
     public static String generateTestDocForClasses(List<Class> classes) throws ClassNotFoundException, IOException,
             TemplateException {
+        System.out.println("DEBUG classes:" + classes);
         HashMap<String, LinkedList<TestDocPlanData>> datamodel = scanClasses(classes);
         String output = processFreemarkerTemplate(datamodel, "testdoc.ftl");
         return output;
@@ -56,7 +57,7 @@ public class GenerateTestDoc {
             // String className = iterator.next().replaceAll(".class$", ""); // .getName();
             String className = clazz.getName();
             if (debug == true) {
-                System.out.println("Scanning: " + className);
+                System.out.println("TestDoc: Scanning: " + className);
             }
             TestDocPlanData testDocPlanData = AnnotationsScanner.getAnnotationsFromClass(clazz); // className);
             if (testDocPlanData != null) {

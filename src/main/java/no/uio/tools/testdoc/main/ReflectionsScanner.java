@@ -23,6 +23,15 @@ import freemarker.template.TemplateException;
 
 public class ReflectionsScanner {
 
+    public static void main(String[] args) throws ClassNotFoundException, IOException, TemplateException {
+        System.out.println("TestDoc: Generating documenation.");
+        List<Class> classesFound = findAllTestDocClassesInClasspath(""); // no.uio.tools.testdoc.examples
+        String html = GenerateTestDoc.generateTestDocForClasses(classesFound);
+        GenerateTestDoc.writeFile("testplan.html", html);
+        System.out.println("Output to 'testplan.html'.");
+    }
+
+
     public static String classPath() {
         String classPath = "";
         ClassLoader sysClassLoader = ClassLoader.getSystemClassLoader();
@@ -54,6 +63,7 @@ public class ReflectionsScanner {
                 new TypeAnnotationsScanner(), new MethodAnnotationsScanner()));
 
         Set classesFound = reflections.getTypesAnnotatedWith(TestDocPlan.class);
+
         for (Iterator iterator = classesFound.iterator(); iterator.hasNext();) {
             Class clazz = (Class) iterator.next();
             if (!(clazz.getName().matches(excludeFilter))) {
@@ -61,15 +71,6 @@ public class ReflectionsScanner {
             }
         }
         return classes;
-    }
-
-
-    public static void main(String[] args) throws ClassNotFoundException, IOException, TemplateException {
-        System.out.println("TestDoc: Generating documenation.");
-        List<Class> classesFound = findAllTestDocClassesInClasspath(""); // no.uio.tools.testdoc.examples
-        String html = GenerateTestDoc.generateTestDocForClasses(classesFound);
-        GenerateTestDoc.writeFile("testplan.html", html);
-        System.out.println("Output to 'testplan.html'.");
     }
 
 }

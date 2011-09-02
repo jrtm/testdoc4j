@@ -5,7 +5,7 @@ import no.uio.tools.testdoc.annotations.TestDocTask;
 import no.uio.tools.testdoc.annotations.TestDocTasks;
 import no.uio.tools.testdoc.annotations.TestDocTest;
 
-@TestDocPlan("Authentication tests")
+@TestDocPlan("Basic example - authentication tests")
 public class BasicExample {
 
     @TestDocTest("Test user login")
