@@ -105,7 +105,7 @@ public class TestDocMojo extends AbstractMavenReport {
 
     @Override
     public void executeReport(final Locale locale) throws MavenReportException {
-        System.out.println("***********executeReport: start!! **********");
+        System.out.println("xxxx ***********executeReport: start!! **********");
         Sink sink = getSink();
         sink.head();
         sink.title();
