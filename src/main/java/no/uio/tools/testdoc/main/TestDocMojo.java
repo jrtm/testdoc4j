@@ -2,29 +2,13 @@ package no.uio.tools.testdoc.main;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.factory.ArtifactFactory;
-import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
-import org.apache.maven.artifact.repository.ArtifactRepository;
-import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
-import org.apache.maven.artifact.resolver.ArtifactResolutionException;
-import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
-import org.apache.maven.artifact.resolver.ArtifactResolver;
 import org.apache.maven.doxia.sink.Sink;
 import org.apache.maven.doxia.siterenderer.Renderer;
-import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
-import org.apache.maven.project.MavenProjectBuilder;
-import org.apache.maven.project.ProjectBuildingException;
-import org.apache.maven.project.artifact.InvalidDependencyVersionException;
-import org.apache.maven.project.artifact.MavenMetadataSource;
 import org.apache.maven.reporting.AbstractMavenReport;
 import org.apache.maven.reporting.MavenReportException;
 
@@ -69,6 +53,7 @@ public class TestDocMojo extends AbstractMavenReport {
     private File outputDirectory;
 
 
+    @Override
     protected String getOutputDirectory() {
         return outputDirectory.getAbsolutePath();
     }
@@ -77,6 +62,7 @@ public class TestDocMojo extends AbstractMavenReport {
     /**
      * @see org.apache.maven.reporting.AbstractMavenReport#getProject()
      */
+    @Override
     protected MavenProject getProject() {
         return project;
     }
@@ -85,17 +71,18 @@ public class TestDocMojo extends AbstractMavenReport {
     /**
      * @see org.apache.maven.reporting.AbstractMavenReport#getSiteRenderer()
      */
+    @Override
     protected Renderer getSiteRenderer() {
         return siteRenderer;
     }
 
 
-    public String getDescription(Locale locale) {
+    public String getDescription(final Locale locale) {
         return "Test plan for human testers";
     }
 
 
-    public String getName(Locale locale) {
+    public String getName(final Locale locale) {
         return "TestDoc";
     }
 
@@ -106,7 +93,7 @@ public class TestDocMojo extends AbstractMavenReport {
     }
 
 
-    public static void generate(Sink sink) {
+    public static void generate(final Sink sink) {
         System.out.println("***********generate(sink): start **********");
         sink.head();
         sink.title();
@@ -116,7 +103,8 @@ public class TestDocMojo extends AbstractMavenReport {
     }
 
 
-    public void executeReport(Locale locale) throws MavenReportException {
+    @Override
+    public void executeReport(final Locale locale) throws MavenReportException {
         System.out.println("***********executeReport: start!! **********");
         Sink sink = getSink();
         sink.head();
@@ -139,7 +127,7 @@ public class TestDocMojo extends AbstractMavenReport {
     }
 
 
-    public void zzzz_executeReport(Locale locale) throws MavenReportException {
+    public void zzzz_executeReport(final Locale locale) throws MavenReportException {
         Sink sink = getSink();
         sink.head();
         sink.title();
@@ -149,22 +137,22 @@ public class TestDocMojo extends AbstractMavenReport {
 
         sink.body();
 
-        try {
-            // Get a full list of all jars needed to run the code
-            Set artifacts = transitivelyResolvePomDependencies();
-            String classpath = "";
-            for (Iterator iterator = artifacts.iterator(); iterator.hasNext();) {
-                Artifact artifact = (Artifact) iterator.next();
-                String artifactPath = artifact.getFile().getAbsolutePath();
-                // System.out.println("DEBUG: Loading Artifact: " + artifactPath);
-                // ReflectionsScanner.addPath(artifact.getFile().getAbsolutePath());
-                classpath = classpath + ":" + artifactPath;
-            }
-            // System.out.println(classpath);
-
-        } catch (Exception e1) {
-            e1.printStackTrace();
-        }
+        // try {
+        // // Get a full list of all jars needed to run the code
+        // Set artifacts = transitivelyResolvePomDependencies();
+        // String classpath = "";
+        // for (Iterator iterator = artifacts.iterator(); iterator.hasNext();) {
+        // Artifact artifact = (Artifact) iterator.next();
+        // String artifactPath = artifact.getFile().getAbsolutePath();
+        // // System.out.println("DEBUG: Loading Artifact: " + artifactPath);
+        // // ReflectionsScanner.addPath(artifact.getFile().getAbsolutePath());
+        // classpath = classpath + ":" + artifactPath;
+        // }
+        // // System.out.println(classpath);
+        //
+        // } catch (Exception e1) {
+        // e1.printStackTrace();
+        // }
 
         String html = "";
         // html = generateTestDocFromAnnotations(html);
@@ -187,13 +175,13 @@ public class TestDocMojo extends AbstractMavenReport {
             ReflectionsScanner.addPath("/Users/thomasfl/workspace/meldeapp/target/test-classes/.");
 
             // /* Get a full list of all jars needed to run the code */
-            Set artifacts = transitivelyResolvePomDependencies();
-            for (Iterator iterator = artifacts.iterator(); iterator.hasNext();) {
-                Artifact artifact = (Artifact) iterator.next();
-                // System.out.println("DEBUG: Loading Artifact: " + artifact.getFile().getAbsolutePath());
-                ReflectionsScanner.addPath(artifact.getFile().getAbsolutePath());
-
-            }
+            // Set artifacts = transitivelyResolvePomDependencies();
+            // for (Iterator iterator = artifacts.iterator(); iterator.hasNext();) {
+            // Artifact artifact = (Artifact) iterator.next();
+            // // System.out.println("DEBUG: Loading Artifact: " + artifact.getFile().getAbsolutePath());
+            // ReflectionsScanner.addPath(artifact.getFile().getAbsolutePath());
+            //
+            // }
 
         } catch (Exception e1) {
             e1.printStackTrace();
@@ -221,28 +209,28 @@ public class TestDocMojo extends AbstractMavenReport {
 
     /* Copied from: http://blogs.webtide.com/janb/entry/extending_the_maven_plugin_classpath */
 
-    /**
-     * @component
-     */
-    private ArtifactResolver artifactResolver;
-
-    /**
-     * 
-     * @component
-     */
-    private ArtifactFactory artifactFactory;
-
-    /**
-     * 
-     * @component
-     */
-    private ArtifactMetadataSource metadataSource;
-
-    /**
-     * 
-     * @parameter expression="${localRepository}"
-     */
-    private ArtifactRepository localRepository;
+    // /**
+    // * @component
+    // */
+    // private ArtifactResolver artifactResolver;
+    //
+    // /**
+    // *
+    // * @component
+    // */
+    // private ArtifactFactory artifactFactory;
+    //
+    // /**
+    // *
+    // * @component
+    // */
+    // private ArtifactMetadataSource metadataSource;
+    //
+    // /**
+    // *
+    // * @parameter expression="${localRepository}"
+    // */
+    // private ArtifactRepository localRepository;
 
     /**
      * 
@@ -250,17 +238,15 @@ public class TestDocMojo extends AbstractMavenReport {
      */
     private List remoteRepositories;
 
-
-    public MavenProject loadPomAsProject(MavenProjectBuilder projectBuilder, Artifact pomArtifact)
-            throws ProjectBuildingException {
-        return projectBuilder.buildFromRepository(pomArtifact, remoteRepositories, localRepository);
-    }
-
-
-    public Artifact getPomArtifact(String groupId, String artifactId, String versionId) {
-        return this.artifactFactory.createBuildArtifact(groupId, artifactId, versionId, "pom");
-    }
-
+    // public MavenProject loadPomAsProject(MavenProjectBuilder projectBuilder, Artifact pomArtifact)
+    // throws ProjectBuildingException {
+    // return projectBuilder.buildFromRepository(pomArtifact, remoteRepositories, localRepository);
+    // }
+    //
+    //
+    // public Artifact getPomArtifact(String groupId, String artifactId, String versionId) {
+    // return this.artifactFactory.createBuildArtifact(groupId, artifactId, versionId, "pom");
+    // }
 
     /*
      * Copied from
@@ -273,34 +259,34 @@ public class TestDocMojo extends AbstractMavenReport {
      * @throws MojoExecutionException
      *             If the classpath can't be found.
      */
-    public Set transitivelyResolvePomDependencies() throws MojoExecutionException {
-        // make Artifacts of all the dependencies
-        Set dependencyArtifacts;
-        try {
-            dependencyArtifacts = MavenMetadataSource.createArtifacts(artifactFactory, dependencies, null, null, null);
-        } catch (InvalidDependencyVersionException e) {
-            throw new MojoExecutionException("Invalid dependency", e);
-        }
-
-        // not forgetting the Artifact of the project itself
-        dependencyArtifacts.add(project.getArtifact());
-
-        List listeners = Collections.EMPTY_LIST;
-
-        // resolve all dependencies transitively to obtain a comprehensive list
-        // of jars
-        ArtifactResolutionResult result;
-        try {
-            result = artifactResolver.resolveTransitively(dependencyArtifacts, project.getArtifact(),
-                    Collections.EMPTY_MAP, localRepository, remoteRepositories, metadataSource, null, listeners);
-        } catch (ArtifactResolutionException e) {
-            throw new MojoExecutionException("Unable to resolve Artifact.", e);
-        } catch (ArtifactNotFoundException e) {
-            throw new MojoExecutionException("Unable to resolve Artifact.", e);
-        }
-
-        return result.getArtifacts();
-    }
+    // public Set transitivelyResolvePomDependencies() throws MojoExecutionException {
+    // // make Artifacts of all the dependencies
+    // Set dependencyArtifacts;
+    // try {
+    // dependencyArtifacts = MavenMetadataSource.createArtifacts(artifactFactory, dependencies, null, null, null);
+    // } catch (InvalidDependencyVersionException e) {
+    // throw new MojoExecutionException("Invalid dependency", e);
+    // }
+    //
+    // // not forgetting the Artifact of the project itself
+    // dependencyArtifacts.add(project.getArtifact());
+    //
+    // List listeners = Collections.EMPTY_LIST;
+    //
+    // // resolve all dependencies transitively to obtain a comprehensive list
+    // // of jars
+    // ArtifactResolutionResult result;
+    // try {
+    // result = artifactResolver.resolveTransitively(dependencyArtifacts, project.getArtifact(),
+    // Collections.EMPTY_MAP, localRepository, remoteRepositories, metadataSource, null, listeners);
+    // } catch (ArtifactResolutionException e) {
+    // throw new MojoExecutionException("Unable to resolve Artifact.", e);
+    // } catch (ArtifactNotFoundException e) {
+    // throw new MojoExecutionException("Unable to resolve Artifact.", e);
+    // }
+    //
+    // return result.getArtifacts();
+    // }
 
     /**
      * The set of dependencies required by the project

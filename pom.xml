@@ -110,26 +110,26 @@
 
 	<dependencies>
 
-
+<!--
         <dependency>
           <groupId>no.uio.tools</groupId>
           <artifactId>testdoc</artifactId>
           <version>0.0.1-SNAPSHOT</version> 
         </dependency>
-
+-->
 
 
 		<dependency>
 			<groupId>org.freemarker</groupId>
 			<artifactId>freemarker</artifactId>
-			<version>2.3.16</version>
+			<version>2.3.18</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.reflections</groupId>
 			<artifactId>reflections</artifactId>
 			<version>0.9.5-RC2</version>
-                        <!-- Må excludere denne pga avhengighet til slf4j-api som skaper problemer ved kjeøring av meldeapp
+                        <!-- Må excludere denne pga avhengighet til slf4j-api som skaper problemer ved kjøring av meldeapp
                             Se http://code.google.com/p/reflections/issues/detail?id=55
                         -->
 			<exclusions>
@@ -143,23 +143,30 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.8.2</version>
+			<version>4.9</version>
 		</dependency>
 
+
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.0.1</version>
+		</dependency>
+		
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.16</version>
         </dependency>
 		 
-
-<!-- 		<dependency>
+<!--
+ 		<dependency>
 		  <groupId>commons-logging</groupId>
 		  <artifactId>commons-logging</artifactId>
 		  <version>1.1.1</version>
 		  <scope>provided</scope>
 		</dependency>
- -->
+-->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
@@ -168,27 +175,33 @@
         </dependency>
 
 		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.6.2</version>
+		</dependency>
+		
+		<dependency>
 			<groupId>org.apache.maven</groupId>
 			<artifactId>maven-plugin-api</artifactId>
-			<version>2.0</version>
+			<version>3.0.3</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.maven.reporting</groupId>
 			<artifactId>maven-reporting-api</artifactId>
-			<version>2.0.8</version>
+			<version>3.0</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.maven.reporting</groupId>
 			<artifactId>maven-reporting-impl</artifactId>
-			<version>2.0.4.3</version>
+			<version>2.1</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.codehaus.plexus</groupId>
 			<artifactId>plexus-utils</artifactId>
-			<version>2.0.1</version>
+			<version>3.0</version>
 		</dependency>
 
 	</dependencies>
@@ -240,7 +253,9 @@
 				<artifactId>maven-eclipse-plugin</artifactId>
 				<version>2.8</version>
 				<configuration>
-					<projectnatures>
+                                     <downloadSources>true</downloadSources>
+                                     <downloadJavadocs>true</downloadJavadocs>
+		     		     <projectnatures>
 						<java.lang.String>org.eclipse.jdt.core.javanature</java.lang.String>
 					</projectnatures>
 				</configuration>
@@ -249,7 +264,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.1</version>
+				<version>2.2.1</version>
 				<configuration>
 					<descriptors>
 						<descriptor>src/assembly/client.xml</descriptor>
