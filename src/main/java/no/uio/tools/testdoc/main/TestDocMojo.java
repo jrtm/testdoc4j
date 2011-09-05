@@ -7,6 +7,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.apache.maven.doxia.sink.Sink;
@@ -14,6 +15,7 @@ import org.apache.maven.doxia.siterenderer.Renderer;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.reporting.AbstractMavenReport;
 import org.apache.maven.reporting.MavenReportException;
+import org.reflections.Reflections;
 
 import freemarker.template.TemplateException;
 
@@ -119,7 +121,7 @@ public class TestDocMojo extends AbstractMavenReport {
 
         // Add the conf dir to the classpath
         // Chain the current thread classloader
-        URLClassLoader urlClassLoader = null;
+        ClassLoader urlClassLoader = null;
         try {
             urlClassLoader = new URLClassLoader(new URL[] { new File("file:///tmp/AdvancedExample.class").toURI()
                     .toURL() }, currentThreadClassLoader);
@@ -131,6 +133,20 @@ public class TestDocMojo extends AbstractMavenReport {
         // Replace the thread classloader - assumes
         // you have permissions to do so
         Thread.currentThread().setContextClassLoader(urlClassLoader);
+
+        try {
+            logger.debug("------> AdvancedExample.class: "
+                    + urlClassLoader.loadClass("no.uio.tools.testdoc.examples.AdvancedExample"));
+        } catch (ClassNotFoundException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+
+        Reflections reflections = new Reflections("no.uio.tools.testdoc");
+
+        Set<Class<?>> annotated = reflections.getTypesAnnotatedWith(no.uio.tools.testdoc.annotations.TestDocPlan.class);
+
+        logger.debug("annotated: " + annotated);
         sink.close();
         String[] args = { "" };
         try {
