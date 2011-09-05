@@ -2,6 +2,9 @@ package no.uio.tools.testdoc.main;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.List;
 import java.util.Locale;
 
@@ -111,6 +114,23 @@ public class TestDocMojo extends AbstractMavenReport {
         sink.title();
         sink.text("TestDoc Testplan text here"); // <head><title> tag
         sink.flush();
+
+        ClassLoader currentThreadClassLoader = Thread.currentThread().getContextClassLoader();
+
+        // Add the conf dir to the classpath
+        // Chain the current thread classloader
+        URLClassLoader urlClassLoader;
+        try {
+            urlClassLoader = new URLClassLoader(new URL[] { new File("file:///tmp/AdvancedExample.class").toURI()
+                    .toURL() }, currentThreadClassLoader);
+        } catch (MalformedURLException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+
+        // Replace the thread classloader - assumes
+        // you have permissions to do so
+        Thread.currentThread().setContextClassLoader(urlClassLoader);
         sink.close();
         String[] args = { "" };
         try {

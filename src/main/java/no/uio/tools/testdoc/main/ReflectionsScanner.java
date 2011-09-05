@@ -6,24 +6,13 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
-
-import no.uio.tools.testdoc.annotations.TestDocPlan;
-
-import org.reflections.Reflections;
-import org.reflections.scanners.MethodAnnotationsScanner;
-import org.reflections.scanners.ResourcesScanner;
-import org.reflections.scanners.TypeAnnotationsScanner;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
 
 import freemarker.template.TemplateException;
 
 public class ReflectionsScanner {
 
-    public static void main(String[] args) throws ClassNotFoundException, IOException, TemplateException {
+    public static void main(final String[] args) throws ClassNotFoundException, IOException, TemplateException {
         System.out.println("TestDoc: Generating documenation.");
         List<Class> classesFound = findAllTestDocClassesInClasspath(""); // no.uio.tools.testdoc.examples
         String html = GenerateTestDoc.generateTestDocForClasses(classesFound);
@@ -44,7 +33,7 @@ public class ReflectionsScanner {
 
 
     /* Add path to classpath at runtime */
-    public static void addPath(String s) throws Exception {
+    public static void addPath(final String s) throws Exception {
         File f = new File(s);
         @SuppressWarnings("deprecation")
         URL u = f.toURL();
@@ -56,20 +45,20 @@ public class ReflectionsScanner {
     }
 
 
-    public static List<Class> findAllTestDocClassesInClasspath(String excludeFilter) {
+    public static List<Class> findAllTestDocClassesInClasspath(final String excludeFilter) {
         List<Class> classes = new ArrayList();
-        Reflections reflections = new Reflections(new ConfigurationBuilder().setUrls(
-                ClasspathHelper.getUrlsForPackagePrefix("")).setScanners(new ResourcesScanner(),
-                new TypeAnnotationsScanner(), new MethodAnnotationsScanner()));
-
-        Set classesFound = reflections.getTypesAnnotatedWith(TestDocPlan.class);
-
-        for (Iterator iterator = classesFound.iterator(); iterator.hasNext();) {
-            Class clazz = (Class) iterator.next();
-            if (!(clazz.getName().matches(excludeFilter))) {
-                classes.add(clazz);
-            }
-        }
+        // Reflections reflections = new Reflections(new ConfigurationBuilder().setUrls(
+        // ClasspathHelper.getUrlsForPackagePrefix("")).setScanners(new ResourcesScanner(),
+        // new TypeAnnotationsScanner(), new MethodAnnotationsScanner()));
+        //
+        // Set classesFound = reflections.getTypesAnnotatedWith(TestDocPlan.class);
+        //
+        // for (Iterator iterator = classesFound.iterator(); iterator.hasNext();) {
+        // Class clazz = (Class) iterator.next();
+        // if (!(clazz.getName().matches(excludeFilter))) {
+        // classes.add(clazz);
+        // }
+        // }
         return classes;
     }
 

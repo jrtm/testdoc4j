@@ -1,25 +1,25 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-    <!-- 
+	<!-- 
         To build jar and place under other maven plugins: 
          
              mvn install
              
         To use  
     -->
-    	
+
 	<parent>
 		<groupId>no.uio.usit</groupId>
 		<artifactId>usit-parent-pom</artifactId>
 		<version>1.0.4</version>
 		<relativePath>./usit-parent-pom/usit-parent-pom.xml</relativePath>
 	</parent>
-	
+
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>no.uio.tools</groupId>
 	<artifactId>testdoc</artifactId>
-	<!-- <packaging>jar</packaging> -->
 	<packaging>maven-plugin</packaging>
 
 	<version>0.0.1-SNAPSHOT</version>
@@ -37,80 +37,10 @@
 			<name>Reflections Maven2 Repository</name>
 			<url>http://reflections.googlecode.com/svn/repo</url>
 		</repository>
-<!--
-		<repository>
-			<id>nexus-public</id>
-			<url>https://repo.usit.uio.no/nexus/content/groups/public/</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<updatePolicy>always</updatePolicy>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-
-		<repository>
-			<id>nexus-internal</id>
-			<url>https://repo.usit.uio.no/nexus/content/groups/internal/</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<updatePolicy>always</updatePolicy>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
--->
 	</repositories>
-
-<!--
-	<pluginRepositories>
-
-		<pluginRepository>
-			<id>nexus-internal</id>
-			<url>https://repo.usit.uio.no/nexus/content/groups/internal/</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</pluginRepository>
-
-		<pluginRepository>
-			<id>nexus-public</id>
-			<url>https://repo.usit.uio.no/nexus/content/groups/public/</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</pluginRepository>
-
-	</pluginRepositories>
-
-	<distributionManagement>
-		<site>
-			<id>repo.usit.uio.no</id>
-			<url>scpexe://repo.usit.uio.no/www/var/virtual/no.uio.utv_80/htdocs/maven-sites/${project.artifactId}</url>
-		</site>
-		<repository>
-			<id>repo.usit.uio.no</id>
-			<url>scpexe://repo.usit.uio.no/www/var/data/nexus/work/storage/internal-release</url>
-		</repository>
-		<snapshotRepository>
-			<id>repo.usit.uio.no</id>
-			<url>scpexe://repo.usit.uio.no/www/var/data/nexus/work/storage/internal-snapshots</url>
-		</snapshotRepository>
-	</distributionManagement>
--->
-
-
 	<dependencies>
 
-<!--
+		<!--
         <dependency>
           <groupId>no.uio.tools</groupId>
           <artifactId>testdoc</artifactId>
@@ -128,16 +58,18 @@
 		<dependency>
 			<groupId>org.reflections</groupId>
 			<artifactId>reflections</artifactId>
-			<version>0.9.5-RC2</version>
-                        <!-- Må excludere denne pga avhengighet til slf4j-api som skaper problemer ved kjøring av meldeapp
+			<version>0.9.5</version>
+			<!-- Må excludere denne pga avhengighet til slf4j-api som skaper problemer ved kjøring av meldeapp
                             Se http://code.google.com/p/reflections/issues/detail?id=55
                         -->
+			<!--
 			<exclusions>
                              <exclusion>
                             <groupId>ch.qos.logback</groupId>
                             <artifactId>logback-classic</artifactId>
                             </exclusion>
 			  </exclusions>
+			  -->
 		</dependency>
 
 		<dependency>
@@ -152,14 +84,14 @@
 			<artifactId>commons-io</artifactId>
 			<version>2.0.1</version>
 		</dependency>
-		
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.16</version>
-        </dependency>
-		 
-<!--
+
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.16</version>
+		</dependency>
+
+		<!--
  		<dependency>
 		  <groupId>commons-logging</groupId>
 		  <artifactId>commons-logging</artifactId>
@@ -167,19 +99,19 @@
 		  <scope>provided</scope>
 		</dependency>
 -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>1.6.2</version>
-            <scope>runtime</scope>
-        </dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.6.2</version>
+			<scope>runtime</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.6.2</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.apache.maven</groupId>
 			<artifactId>maven-plugin-api</artifactId>
@@ -207,36 +139,36 @@
 	</dependencies>
 
 
-    <reporting>
-        <plugins>
+	<reporting>
+		<plugins>
 
 
-            <plugin>
-                <groupId>no.uio.tools</groupId>
-                <artifactId>testdoc</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
-            </plugin>
+			<plugin>
+				<groupId>no.uio.tools</groupId>
+				<artifactId>testdoc</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</plugin>
 
-        	<plugin>
-        		<groupId>org.apache.maven.plugins</groupId>
-        		<artifactId>maven-project-info-reports-plugin</artifactId>
-        		<version>2.4</version>
-        	</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>2.4</version>
+			</plugin>
 
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-site-plugin</artifactId>
-                <version>2.0</version>
-                <configuration>
-                    <inputEncoding>iso-8859-1</inputEncoding>
-                    <outputEncoding>UTF-8</outputEncoding>
-                    <locales>en</locales>
-                </configuration>
-            </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>2.0</version>
+				<configuration>
+					<inputEncoding>iso-8859-1</inputEncoding>
+					<outputEncoding>UTF-8</outputEncoding>
+					<locales>en</locales>
+				</configuration>
+			</plugin>
 
-        </plugins>
-    </reporting>
+		</plugins>
+	</reporting>
 
 
 	<build>
@@ -260,9 +192,9 @@
 				<artifactId>maven-eclipse-plugin</artifactId>
 				<version>2.8</version>
 				<configuration>
-                                     <downloadSources>true</downloadSources>
-                                     <downloadJavadocs>true</downloadJavadocs>
-		     		     <projectnatures>
+					<downloadSources>true</downloadSources>
+					<downloadJavadocs>true</downloadJavadocs>
+					<projectnatures>
 						<java.lang.String>org.eclipse.jdt.core.javanature</java.lang.String>
 					</projectnatures>
 				</configuration>
@@ -297,11 +229,11 @@
 				</executions>
 			</plugin>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-site-plugin</artifactId>
-                <version>3.0</version>
-            </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.0</version>
+			</plugin>
 
 		</plugins>
 
