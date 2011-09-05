@@ -119,7 +119,7 @@ public class TestDocMojo extends AbstractMavenReport {
 
         // Add the conf dir to the classpath
         // Chain the current thread classloader
-        URLClassLoader urlClassLoader;
+        URLClassLoader urlClassLoader = null;
         try {
             urlClassLoader = new URLClassLoader(new URL[] { new File("file:///tmp/AdvancedExample.class").toURI()
                     .toURL() }, currentThreadClassLoader);
