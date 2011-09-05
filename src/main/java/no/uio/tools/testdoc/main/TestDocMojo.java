@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -30,6 +31,35 @@ import freemarker.template.TemplateException;
  * @phase site
  */
 public class TestDocMojo extends AbstractMavenReport {
+
+    public static void main(final String[] args) throws MavenReportException {
+        URLClassLoader urlClassLoader = null;
+        File file = new File("/Users/kajh/src/meldeapp/trunk/target/test-classes/");
+        // File file = new File("/Users/kajh/src/meldeapp/trunk/target/meldeapp.war");
+
+        try {
+            urlClassLoader = new URLClassLoader(new URL[] { file.toURI().toURL() });
+        } catch (MalformedURLException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+
+        }
+
+        // Replace the thread classloader - assumes
+        // you have permissions to do so
+        // Thread.currentThread().setContextClassLoader(urlClassLoader);
+        logger.debug("3");
+
+        try {
+            logger.debug("------> AdvancedExample.class: "
+            // + urlClassLoader.loadClass("no.uio.webapps.meldeapp.CleanupListener"));
+                    + urlClassLoader.loadClass("no.uio.webapps.meldeapp.blackbox.ITFrontPageTest"));
+        } catch (ClassNotFoundException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+
+    }
 
     private static final Logger logger = Logger.getLogger(TestDocMojo.class);
 
@@ -121,28 +151,38 @@ public class TestDocMojo extends AbstractMavenReport {
 
         // Add the conf dir to the classpath
         // Chain the current thread classloader
-        ClassLoader urlClassLoader = null;
+        URLClassLoader urlClassLoader = null;
+        logger.debug("1");
+
+        URLClassLoader sysLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+        logger.debug("sysLoader urls: " + Arrays.asList(sysLoader.getURLs()));
+
         try {
-            urlClassLoader = new URLClassLoader(new URL[] { new File("file:///tmp/AdvancedExample.class").toURI()
-                    .toURL() }, currentThreadClassLoader);
+            urlClassLoader = new URLClassLoader(new URL[] { new File(
+                    "/Users/kajh/src/meldeapp/trunk/target/test-classes").toURI().toURL() });
         } catch (MalformedURLException e1) {
             // TODO Auto-generated catch block
             e1.printStackTrace();
-        }
 
+        }
+        logger.debug("urls: " + Arrays.asList(urlClassLoader.getURLs()));
+        logger.debug("2");
         // Replace the thread classloader - assumes
         // you have permissions to do so
-        Thread.currentThread().setContextClassLoader(urlClassLoader);
+        // Thread.currentThread().setContextClassLoader(urlClassLoader);
+        logger.debug("3");
 
         try {
             logger.debug("------> AdvancedExample.class: "
-                    + urlClassLoader.loadClass("no.uio.tools.testdoc.examples.AdvancedExample"));
+                    + urlClassLoader.loadClass("no.uio.webapps.meldeapp.blackbox.ITFrontPageTest"));
         } catch (ClassNotFoundException e1) {
             // TODO Auto-generated catch block
             e1.printStackTrace();
         }
 
-        Reflections reflections = new Reflections("no.uio.tools.testdoc");
+        logger.debug("4");
+
+        Reflections reflections = new Reflections("no.uio.webapps");
 
         Set<Class<?>> annotated = reflections.getTypesAnnotatedWith(no.uio.tools.testdoc.annotations.TestDocPlan.class);
 

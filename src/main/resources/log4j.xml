@@ -24,83 +24,10 @@
         <appender-ref ref="A1"/> 
     </logger>
 
-    <logger name="net.sf.ehcache.distribution" additivity="false">
-        <level value="info" />
-        <appender-ref ref="A1"/>
-    </logger>
-    
- 
-    <!-- Don't want warnings about EhCacheProvider not finding configuration -->
-    <logger name="org.hibernate.cache.EhCacheProvider" additivity="false">
-        <level value="error"/>
-        <appender-ref ref="A1"/>
-    </logger>
- 
-     <!-- Workaround for https://jira.springframework.org/browse/LDAP-181 -->
-     <logger name="org.springframework.ldap.core.LdapTemplate" additivity="false">
-        <level value="warn"/>
-        <appender-ref ref="A1"/>
-    </logger>
-
- 
-    <!--  slår av debuginfo fra javarebel -->
-    <!-- 
-   <logger name="org.springframework.beans.factory.support.DefaultListableBeanFactory" additivity="false">
-      <level value="warn" />
-      <appender-ref ref="A1" />
-   </logger>
-    -->
-   
- 
-   
-   
-    <logger name="org.springframework" additivity="false">
-        <level value="warn"/>
-        <appender-ref ref="A1"/>
-    </logger>
-
-<!--
-    <logger name="org.springframework.transaction" additivity="false">
-        <level value="debug"/>
-        <appender-ref ref="A1"/>
-    </logger>
--->
-<!--
-    <logger name="org.hibernate.validator" additivity="false">
-        <level value="debug"/>
-        <appender-ref ref="A1"/>
-    </logger>
--->
-    
-    
-<!--
-    <logger name="org.hibernate.SQL" additivity="false">
-        <level value="debug"/>
-        <appender-ref ref="A1"/>
-    </logger>
--->
- 
-<!--
-    <logger name="org.hibernate.type" additivity="false">
-        <level value="trace"/>
-        <appender-ref ref="A1"/>
-    </logger>
--->
-
-   
-    <logger name="org.hibernate.cfg.SettingsFactory" additivity="false">
-        <level value="info"/>
-        <appender-ref ref="A1"/>
-    </logger>
-    
-    <logger name="org.mortbay" additivity="false">
-        <level value="warn"/>
-        <appender-ref ref="A1"/>
-    </logger>
     
     <!-- Note: This root logger will be inherited by all loggers unless you use additivity="false". -->
     <root>
-        <level value="info"/>
+        <level value="debug"/>
         <appender-ref ref="A1"/>
     </root>
     
