@@ -22,9 +22,6 @@ import freemarker.template.TemplateException;
 /**
  * Maven reporting mojo plugin for generating TestDoc reports.
  * 
- * 
- * Documentation: http://teleal.org/weblog/software/Howto%20write%20a%20Maven%20report%20plugin.html
- * 
  * @author twitter: @thomasfl
  * @goal testdoc
  * @phase site
@@ -56,37 +53,13 @@ public class TestDocMojo extends AbstractMavenReport {
     private File outputDirectory;
 
 
-    @Override
-    protected String getOutputDirectory() {
-        return outputDirectory.getAbsolutePath();
-    }
-
-
-    /**
-     * @see org.apache.maven.reporting.AbstractMavenReport#getProject()
-     */
-    @Override
-    protected MavenProject getProject() {
-        return project;
-    }
-
-
-    /**
-     * @see org.apache.maven.reporting.AbstractMavenReport#getSiteRenderer()
-     */
-    @Override
-    protected Renderer getSiteRenderer() {
-        return siteRenderer;
+    public String getName(final Locale locale) {
+        return "TestDoc";
     }
 
 
     public String getDescription(final Locale locale) {
         return "Test plans for human testers.";
-    }
-
-
-    public String getName(final Locale locale) {
-        return "TestDoc";
     }
 
 
@@ -119,76 +92,27 @@ public class TestDocMojo extends AbstractMavenReport {
     }
 
 
-    /* Returns an array with classes and jar files we want to add to classpath when scanning for annotations */
-    private URL[] findClassURIs(String jarDirectory) throws MalformedURLException {
-        File dir = new File(jarDirectory);
-        List<URL> urls = new ArrayList<URL>();
-        String curDir = System.getProperty("user.dir");
-        String filename = curDir + "/target/test-classes/";
-        URL url = new File(filename).toURI().toURL();
-        urls.add(url);
-
-        String[] children = dir.list();
-        if (children == null) {
-            // Either dir does not exist or is not a directory
-        } else {
-            for (int i = 0; i < children.length; i++) {
-                filename = children[i];
-                url = new File(jarDirectory + filename).toURI().toURL();
-                urls.add(url);
-            }
-        }
-
-        return urls.toArray(new URL[0]);
-    }
-
-
     @Override
     public void executeReport(final Locale locale) throws MavenReportException {
         outputTestDocBannerToLog();
 
-        String curDir = System.getProperty("user.dir");
-        // String jarDirectory = curDir + "/target/meldeapp/WEB-INF/lib/";
-
         ClassLoader currentThreadClassLoader = Thread.currentThread().getContextClassLoader();
         ClassLoader urlClassLoader = null;
         try {
-            String filename = curDir + "/target/test-classes/";
+            String filename = System.getProperty("user.dir") + "/target/test-classes/";
             URL url = new File(filename).toURI().toURL();
-            // urlClassLoader = new URLClassLoader(findClassURIs(jarDirectory), currentThreadClassLoader);
             urlClassLoader = new URLClassLoader(new URL[] { url }, currentThreadClassLoader);
         } catch (MalformedURLException e1) {
             e1.printStackTrace();
         }
         Thread.currentThread().setContextClassLoader(urlClassLoader);
-
-        /* ------------- */
-        // String className = "no.uio.webapps.meldeapp.blackbox.ITFrontPageTest";
-        // try {
-        // logger.debug("Reading class: " + urlClassLoader.loadClass(className));
-        // } catch (ClassNotFoundException e1) {
-        // e1.printStackTrace();
-        // }
-        // /* ------------- */
-
-        /* Read annotations using the org.reflections api */
-        // Reflections reflections = new Reflections("no.uio.tools.testdoc");
-
-        Reflections reflections = new Reflections(""); // no.uio");
-
+        Reflections reflections = new Reflections("");
         Set<Class<?>> annotated = reflections.getTypesAnnotatedWith(no.uio.tools.testdoc.annotations.TestDocPlan.class);
-
         List classesFound = new ArrayList(annotated);
-        // getLog().info("Classes found: " + classesFound.size());
-        // classesFound.remove(BasicExample.class);
-        // classesFound.remove(AdvancedExample.class);
-        // getLog().info("Classes found: " + classesFound.size());
+        getLog().info("TestDoc found " + classesFound.size() + " classes with TestDoc annotations.");
 
         try {
-
             String html = ReportGenerator.generateTestDocForClasses(classesFound);
-            // String outputFilename = "testplan3.html";
-            // GenerateTestDoc.writeFile(outputFilename, html);
             generateTestDocReport(getSink(), html);
 
         } catch (ClassNotFoundException e1) {
@@ -211,6 +135,31 @@ public class TestDocMojo extends AbstractMavenReport {
         getLog().info("   | |  | (           ) |  | |  | |   ) | |   | | |        ");
         getLog().info("   | |  | (____/Y\\____) |  | |  | (__/  ) (___) | (____/\\  ");
         getLog().info("   )_(  (_______|_______)  )_(  (______/(_______)_______/  ");
-        getLog().info("  TestDoc - Show the world what your tests do.             ");
+        getLog().info("  TestDoc - Show the world what your tests does.           ");
     }
+
+
+    @Override
+    protected String getOutputDirectory() {
+        return outputDirectory.getAbsolutePath();
+    }
+
+
+    /**
+     * @see org.apache.maven.reporting.AbstractMavenReport#getProject()
+     */
+    @Override
+    protected MavenProject getProject() {
+        return project;
+    }
+
+
+    /**
+     * @see org.apache.maven.reporting.AbstractMavenReport#getSiteRenderer()
+     */
+    @Override
+    protected Renderer getSiteRenderer() {
+        return siteRenderer;
+    }
+
 }
