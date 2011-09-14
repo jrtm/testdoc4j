@@ -9,5 +9,8 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface TestDocPlan {
 
-    String value();
+    String title();
+
+
+    int sortOrder() default 0;
 }

@@ -9,7 +9,7 @@ import no.uio.tools.testdoc.annotations.TestDocTest;
 
 import org.junit.Test;
 
-@TestDocPlan("Advanced example")
+@TestDocPlan(title = "Advanced example", sortOrder = 2)
 public class AdvancedExample {
 
     public static void toBeImplemented() {

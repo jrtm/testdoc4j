@@ -11,10 +11,10 @@
     
     <table cellpadding="3" border="1">
     <tr align="left">
-       <td><b>Nr.</b></td>
+       <td><b>No.</b></td>
        <td><b>Test</b></td>
-       <td><b>Aksjoner</b></td>
-       <td><b>Fasit</b></td>
+       <td><b>Action</b></td>
+       <td><b>Desired result</b></td>
     </tr>
     
     <#if testplan.getTests()?exists>

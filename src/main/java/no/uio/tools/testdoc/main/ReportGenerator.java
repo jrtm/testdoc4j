@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -23,27 +24,18 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
-public class GenerateTestDoc {
+public class ReportGenerator {
 
-    public static boolean debug = true;
+    public static boolean debug = false;
 
 
     public static String generateTestDocForClasses(List<Class> classes) throws ClassNotFoundException, IOException,
             TemplateException {
-        System.out.println("DEBUG classes:" + classes);
         HashMap<String, LinkedList<TestDocPlanData>> datamodel = scanClasses(classes);
         String output = processFreemarkerTemplate(datamodel, "testdoc.ftl");
         return output;
     }
 
-
-    // public static String generateTestDoc(String jarName, String packageName) throws ClassNotFoundException,
-    // IOException, TemplateException {
-    // List<Class> classes = JarScanner.getClassesInPackage(jarName, packageName);
-    // HashMap<String, LinkedList<TestDocPlanData>> datamodel = scanClasses(classes);
-    // String output = processFreemarkerTemplate(datamodel, "testdoc.ftl");
-    // return output;
-    // }
 
     @SuppressWarnings("rawtypes")
     public static HashMap<String, LinkedList<TestDocPlanData>> scanClasses(List classes) throws ClassNotFoundException,
@@ -54,18 +46,20 @@ public class GenerateTestDoc {
 
         for (Iterator<Class> iterator = classes.iterator(); iterator.hasNext();) {
             Class clazz = (Class) iterator.next();
-            // String className = iterator.next().replaceAll(".class$", ""); // .getName();
             String className = clazz.getName();
             if (debug == true) {
                 System.out.println("TestDoc: Scanning: " + className);
             }
-            TestDocPlanData testDocPlanData = AnnotationsScanner.getAnnotationsFromClass(clazz); // className);
+            TestDocPlanData testDocPlanData = AnnotationsScanner.getAnnotationsFromClass(clazz);
             if (testDocPlanData != null) {
-                System.out.println("Reading: " + className);
+                if (debug == true) {
+                    System.out.println("Reading: " + className);
+                }
                 testplans.add(testDocPlanData);
             }
         }
 
+        Collections.sort(testplans);
         datamodel.put("testplans", testplans);
         return datamodel;
     }
@@ -92,18 +86,10 @@ public class GenerateTestDoc {
         ClassTemplateLoader ctl = new ClassTemplateLoader(classLoader.getClass(), "/");
         cfg.setTemplateLoader(ctl);
 
-        if (debug) {
-            // File dir = new File("/Users/thomasfl/workspace/w3-testdoc/src/main/resources/");
-            // cfg.setDirectoryForTemplateLoading(dir);
-        }
         cfg.setLocalizedLookup(false);
 
         String templateText = readTextFromJar("/" + template);
-        // System.out.println(markup);
         Template tpl = new Template(template, new StringReader(templateText), cfg);
-
-        // Template tpl = cfg.getTemplate("/" + template);
-
         tpl.process(datamodel, output);
         return output.toString();
     }
@@ -120,7 +106,7 @@ public class GenerateTestDoc {
     }
 
 
-    /* Reads template text from jar file. */
+    /* Reads text file from jar archive. Used to read template files. */
     public static String readTextFromJar(String s) {
         InputStream is = null;
         BufferedReader br = null;

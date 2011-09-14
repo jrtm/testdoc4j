@@ -5,12 +5,11 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.apache.maven.doxia.sink.Sink;
 import org.apache.maven.doxia.siterenderer.Renderer;
 import org.apache.maven.project.MavenProject;
@@ -31,37 +30,6 @@ import freemarker.template.TemplateException;
  * @phase site
  */
 public class TestDocMojo extends AbstractMavenReport {
-
-    public static void main(final String[] args) throws MavenReportException {
-        URLClassLoader urlClassLoader = null;
-        File file = new File("/Users/kajh/src/meldeapp/trunk/target/test-classes/");
-        // File file = new File("/Users/kajh/src/meldeapp/trunk/target/meldeapp.war");
-
-        try {
-            urlClassLoader = new URLClassLoader(new URL[] { file.toURI().toURL() });
-        } catch (MalformedURLException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-
-        }
-
-        // Replace the thread classloader - assumes
-        // you have permissions to do so
-        // Thread.currentThread().setContextClassLoader(urlClassLoader);
-        logger.debug("3");
-
-        try {
-            logger.debug("------> AdvancedExample.class: "
-            // + urlClassLoader.loadClass("no.uio.webapps.meldeapp.CleanupListener"));
-                    + urlClassLoader.loadClass("no.uio.webapps.meldeapp.blackbox.ITFrontPageTest"));
-        } catch (ClassNotFoundException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
-
-    }
-
-    private static final Logger logger = Logger.getLogger(TestDocMojo.class);
 
     /**
      * The Maven Project.
@@ -113,7 +81,7 @@ public class TestDocMojo extends AbstractMavenReport {
 
 
     public String getDescription(final Locale locale) {
-        return "Test plan for human testers";
+        return "Test plans for human testers.";
     }
 
 
@@ -123,254 +91,126 @@ public class TestDocMojo extends AbstractMavenReport {
 
 
     public String getOutputName() {
-        System.out.println("***********getOutputName()**********");
         return "testdoc";
     }
 
 
-    public static void generate(final Sink sink) {
-        System.out.println("***********generate(sink): start **********");
+    public static void generateTestDocReport(final Sink sink, String htmlReport) {
         sink.head();
         sink.title();
-        sink.text("TestDoc Testplan text here"); // <head><title> tag
-        sink.flush();
-        sink.close();
-    }
-
-
-    @Override
-    public void executeReport(final Locale locale) throws MavenReportException {
-        System.out.println("***********executeReport: start!! **********");
-        Sink sink = getSink();
-        sink.head();
-        sink.title();
-        sink.text("TestDoc Testplan text here"); // <head><title> tag
-        sink.flush();
-
-        ClassLoader currentThreadClassLoader = Thread.currentThread().getContextClassLoader();
-
-        // Add the conf dir to the classpath
-        // Chain the current thread classloader
-        URLClassLoader urlClassLoader = null;
-        logger.debug("1");
-
-        URLClassLoader sysLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-        logger.debug("sysLoader urls: " + Arrays.asList(sysLoader.getURLs()));
-
-        try {
-            urlClassLoader = new URLClassLoader(new URL[] { new File(
-                    "/Users/kajh/src/meldeapp/trunk/target/test-classes").toURI().toURL() });
-        } catch (MalformedURLException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-
-        }
-        logger.debug("urls: " + Arrays.asList(urlClassLoader.getURLs()));
-        logger.debug("2");
-        // Replace the thread classloader - assumes
-        // you have permissions to do so
-        // Thread.currentThread().setContextClassLoader(urlClassLoader);
-        logger.debug("3");
-
-        try {
-            logger.debug("------> AdvancedExample.class: "
-                    + urlClassLoader.loadClass("no.uio.webapps.meldeapp.blackbox.ITFrontPageTest"));
-        } catch (ClassNotFoundException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
-
-        logger.debug("4");
-
-        Reflections reflections = new Reflections("no.uio.webapps");
-
-        Set<Class<?>> annotated = reflections.getTypesAnnotatedWith(no.uio.tools.testdoc.annotations.TestDocPlan.class);
-
-        logger.debug("annotated: " + annotated);
-        sink.close();
-        String[] args = { "" };
-        try {
-            ReflectionsScanner.main(args);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (TemplateException e) {
-            e.printStackTrace();
-        }
-        System.out.println("***********executeReport: done!! **********");
-
-    }
-
-
-    public void zzzz_executeReport(final Locale locale) throws MavenReportException {
-        Sink sink = getSink();
-        sink.head();
-        sink.title();
-        sink.text("TestDoc Testplan"); // <head><title> tag
+        sink.text("TestDoc Testplan");
         sink.title_();
         sink.head_();
-
         sink.body();
 
-        // try {
-        // // Get a full list of all jars needed to run the code
-        // Set artifacts = transitivelyResolvePomDependencies();
-        // String classpath = "";
-        // for (Iterator iterator = artifacts.iterator(); iterator.hasNext();) {
-        // Artifact artifact = (Artifact) iterator.next();
-        // String artifactPath = artifact.getFile().getAbsolutePath();
-        // // System.out.println("DEBUG: Loading Artifact: " + artifactPath);
-        // // ReflectionsScanner.addPath(artifact.getFile().getAbsolutePath());
-        // classpath = classpath + ":" + artifactPath;
-        // }
-        // // System.out.println(classpath);
-        //
-        // } catch (Exception e1) {
-        // e1.printStackTrace();
-        // }
+        sink.section1();
+        sink.sectionTitle1();
+        sink.text("TestDoc testplan");
+        sink.sectionTitle1_();
+        sink.section1_();
 
-        String html = "";
-        // html = generateTestDocFromAnnotations(html);
-        html = "<h1>Her kommer det noe</h1>";
-        // System.out.println("TestDoc: DEBUG: Html: " + html);
-        sink.rawText("<h1>TestDoc TestPlan</h1><br/>" + html);
+        sink.section1();
+        sink.rawText(htmlReport);
+        sink.section1_();
+
         sink.body_();
         sink.flush();
         sink.close();
     }
 
 
-    private String generateTestDocFromAnnotations(String html) {
-        try {
+    /* Returns an array with classes and jar files we want to add to classpath when scanning for annotations */
+    private URL[] findClassURIs(String jarDirectory) throws MalformedURLException {
+        File dir = new File(jarDirectory);
+        List<URL> urls = new ArrayList<URL>();
+        String curDir = System.getProperty("user.dir");
+        String filename = curDir + "/target/test-classes/";
+        URL url = new File(filename).toURI().toURL();
+        urls.add(url);
 
-            // System.out.println("ClassPath: " + ReflectionsScanner.classPath());
-            // ReflectionsScanner.addPath("/Users/thomasfl/workspace/w3-testdoc.");
-            // ReflectionsScanner.addPath("./target/classes/.");
-
-            ReflectionsScanner.addPath("/Users/thomasfl/workspace/meldeapp/target/test-classes/.");
-
-            // /* Get a full list of all jars needed to run the code */
-            // Set artifacts = transitivelyResolvePomDependencies();
-            // for (Iterator iterator = artifacts.iterator(); iterator.hasNext();) {
-            // Artifact artifact = (Artifact) iterator.next();
-            // // System.out.println("DEBUG: Loading Artifact: " + artifact.getFile().getAbsolutePath());
-            // ReflectionsScanner.addPath(artifact.getFile().getAbsolutePath());
-            //
-            // }
-
-        } catch (Exception e1) {
-            e1.printStackTrace();
+        String[] children = dir.list();
+        if (children == null) {
+            // Either dir does not exist or is not a directory
+        } else {
+            for (int i = 0; i < children.length; i++) {
+                filename = children[i];
+                url = new File(jarDirectory + filename).toURI().toURL();
+                urls.add(url);
+            }
         }
-        List<Class> classesFound = ReflectionsScanner
-                .findAllTestDocClassesInClasspath("no.uio.webapps.meldeapp.blackbox"); // no.uio.tools.testdoc.examples
 
-        System.out.println("TestDoc: Classes with annotations found:" + classesFound.size());
-        // System.out.println("ClassPath: " + ReflectionsScanner.classPath());
-
-        try {
-            html = GenerateTestDoc.generateTestDocForClasses(classesFound);
-        } catch (ClassNotFoundException e) {
-            System.out.println("TestDoc Exception: 1");
-            e.printStackTrace();
-        } catch (IOException e) {
-            System.out.println("TestDoc Exception: 2");
-            e.printStackTrace();
-        } catch (TemplateException e) {
-            System.out.println("TestDoc Exception: 3");
-            e.printStackTrace();
-        }
-        return html;
+        return urls.toArray(new URL[0]);
     }
 
-    /* Copied from: http://blogs.webtide.com/janb/entry/extending_the_maven_plugin_classpath */
 
-    // /**
-    // * @component
-    // */
-    // private ArtifactResolver artifactResolver;
-    //
-    // /**
-    // *
-    // * @component
-    // */
-    // private ArtifactFactory artifactFactory;
-    //
-    // /**
-    // *
-    // * @component
-    // */
-    // private ArtifactMetadataSource metadataSource;
-    //
-    // /**
-    // *
-    // * @parameter expression="${localRepository}"
-    // */
-    // private ArtifactRepository localRepository;
+    @Override
+    public void executeReport(final Locale locale) throws MavenReportException {
+        outputTestDocBannerToLog();
 
-    /**
-     * 
-     * @parameter expression="${project.remoteArtifactRepositories}"
-     */
-    private List remoteRepositories;
+        String curDir = System.getProperty("user.dir");
+        // String jarDirectory = curDir + "/target/meldeapp/WEB-INF/lib/";
 
-    // public MavenProject loadPomAsProject(MavenProjectBuilder projectBuilder, Artifact pomArtifact)
-    // throws ProjectBuildingException {
-    // return projectBuilder.buildFromRepository(pomArtifact, remoteRepositories, localRepository);
-    // }
-    //
-    //
-    // public Artifact getPomArtifact(String groupId, String artifactId, String versionId) {
-    // return this.artifactFactory.createBuildArtifact(groupId, artifactId, versionId, "pom");
-    // }
+        ClassLoader currentThreadClassLoader = Thread.currentThread().getContextClassLoader();
+        ClassLoader urlClassLoader = null;
+        try {
+            String filename = curDir + "/target/test-classes/";
+            URL url = new File(filename).toURI().toURL();
+            // urlClassLoader = new URLClassLoader(findClassURIs(jarDirectory), currentThreadClassLoader);
+            urlClassLoader = new URLClassLoader(new URL[] { url }, currentThreadClassLoader);
+        } catch (MalformedURLException e1) {
+            e1.printStackTrace();
+        }
+        Thread.currentThread().setContextClassLoader(urlClassLoader);
 
-    /*
-     * Copied from
-     * http://mojo.codehaus.org/fitnesse-maven-plugin/xref/org/codehaus/mojo/fitnesse/FitnesseRunnerMojo.html
-     */
-    /**
-     * Create the transitive classpath.
-     * 
-     * @return The dependent artifacts.
-     * @throws MojoExecutionException
-     *             If the classpath can't be found.
-     */
-    // public Set transitivelyResolvePomDependencies() throws MojoExecutionException {
-    // // make Artifacts of all the dependencies
-    // Set dependencyArtifacts;
-    // try {
-    // dependencyArtifacts = MavenMetadataSource.createArtifacts(artifactFactory, dependencies, null, null, null);
-    // } catch (InvalidDependencyVersionException e) {
-    // throw new MojoExecutionException("Invalid dependency", e);
-    // }
-    //
-    // // not forgetting the Artifact of the project itself
-    // dependencyArtifacts.add(project.getArtifact());
-    //
-    // List listeners = Collections.EMPTY_LIST;
-    //
-    // // resolve all dependencies transitively to obtain a comprehensive list
-    // // of jars
-    // ArtifactResolutionResult result;
-    // try {
-    // result = artifactResolver.resolveTransitively(dependencyArtifacts, project.getArtifact(),
-    // Collections.EMPTY_MAP, localRepository, remoteRepositories, metadataSource, null, listeners);
-    // } catch (ArtifactResolutionException e) {
-    // throw new MojoExecutionException("Unable to resolve Artifact.", e);
-    // } catch (ArtifactNotFoundException e) {
-    // throw new MojoExecutionException("Unable to resolve Artifact.", e);
-    // }
-    //
-    // return result.getArtifacts();
-    // }
+        /* ------------- */
+        // String className = "no.uio.webapps.meldeapp.blackbox.ITFrontPageTest";
+        // try {
+        // logger.debug("Reading class: " + urlClassLoader.loadClass(className));
+        // } catch (ClassNotFoundException e1) {
+        // e1.printStackTrace();
+        // }
+        // /* ------------- */
 
-    /**
-     * The set of dependencies required by the project
-     * 
-     * @parameter default-value="${project.dependencies}"
-     * @required
-     * @readonly
-     */
-    private java.util.List dependencies;
+        /* Read annotations using the org.reflections api */
+        // Reflections reflections = new Reflections("no.uio.tools.testdoc");
 
+        Reflections reflections = new Reflections(""); // no.uio");
+
+        Set<Class<?>> annotated = reflections.getTypesAnnotatedWith(no.uio.tools.testdoc.annotations.TestDocPlan.class);
+
+        List classesFound = new ArrayList(annotated);
+        // getLog().info("Classes found: " + classesFound.size());
+        // classesFound.remove(BasicExample.class);
+        // classesFound.remove(AdvancedExample.class);
+        // getLog().info("Classes found: " + classesFound.size());
+
+        try {
+
+            String html = ReportGenerator.generateTestDocForClasses(classesFound);
+            // String outputFilename = "testplan3.html";
+            // GenerateTestDoc.writeFile(outputFilename, html);
+            generateTestDocReport(getSink(), html);
+
+        } catch (ClassNotFoundException e1) {
+            e1.printStackTrace();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        } catch (TemplateException e1) {
+            e1.printStackTrace();
+        }
+
+    }
+
+
+    private void outputTestDocBannerToLog() {
+        getLog().info(" ________________ ______________________  _______ _______  ");
+        getLog().info(" \\__   __/  ____ \\  ____ \\__   __/  __  \\(  ___  )  ____ \\ ");
+        getLog().info("   ) (  | (    \\/ (    \\/  ) (  | (  \\  ) (   ) | (    \\/  ");
+        getLog().info("   | |  | (__   | (_____   | |  | |   ) | |   | | |        ");
+        getLog().info("   | |  |  __)  (_____  )  | |  | |   | | |   | | |        ");
+        getLog().info("   | |  | (           ) |  | |  | |   ) | |   | | |        ");
+        getLog().info("   | |  | (____/Y\\____) |  | |  | (__/  ) (___) | (____/\\  ");
+        getLog().info("   )_(  (_______|_______)  )_(  (______/(_______)_______/  ");
+        getLog().info("  TestDoc - Show the world what your tests do.             ");
+    }
 }

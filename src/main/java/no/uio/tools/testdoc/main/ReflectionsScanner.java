@@ -6,7 +6,13 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+
+import no.uio.tools.testdoc.annotations.TestDocPlan;
+
+import org.reflections.Reflections;
 
 import freemarker.template.TemplateException;
 
@@ -14,10 +20,11 @@ public class ReflectionsScanner {
 
     public static void main(final String[] args) throws ClassNotFoundException, IOException, TemplateException {
         System.out.println("TestDoc: Generating documenation.");
-        List<Class> classesFound = findAllTestDocClassesInClasspath(""); // no.uio.tools.testdoc.examples
-        String html = GenerateTestDoc.generateTestDocForClasses(classesFound);
-        GenerateTestDoc.writeFile("testplan.html", html);
-        System.out.println("Output to 'testplan.html'.");
+        List<Class> classesFound = findAllTestDocClassesInClasspath("no.uio.tools.testdoc.examples"); // no.uio.tools.testdoc.examples
+        String html = ReportGenerator.generateTestDocForClasses(classesFound);
+        String filename = "testplan_test.html";
+        ReportGenerator.writeFile(filename, html);
+        System.out.println("Output to '" + filename + "'.");
     }
 
 
@@ -33,6 +40,7 @@ public class ReflectionsScanner {
 
 
     /* Add path to classpath at runtime */
+    @SuppressWarnings("deprecation")
     public static void addPath(final String s) throws Exception {
         File f = new File(s);
         @SuppressWarnings("deprecation")
@@ -47,18 +55,19 @@ public class ReflectionsScanner {
 
     public static List<Class> findAllTestDocClassesInClasspath(final String excludeFilter) {
         List<Class> classes = new ArrayList();
+        Reflections reflections = new Reflections("no.uio.tools");
         // Reflections reflections = new Reflections(new ConfigurationBuilder().setUrls(
         // ClasspathHelper.getUrlsForPackagePrefix("")).setScanners(new ResourcesScanner(),
         // new TypeAnnotationsScanner(), new MethodAnnotationsScanner()));
-        //
-        // Set classesFound = reflections.getTypesAnnotatedWith(TestDocPlan.class);
-        //
-        // for (Iterator iterator = classesFound.iterator(); iterator.hasNext();) {
-        // Class clazz = (Class) iterator.next();
-        // if (!(clazz.getName().matches(excludeFilter))) {
-        // classes.add(clazz);
-        // }
-        // }
+
+        Set classesFound = reflections.getTypesAnnotatedWith(TestDocPlan.class);
+
+        for (Iterator iterator = classesFound.iterator(); iterator.hasNext();) {
+            Class clazz = (Class) iterator.next();
+            if (!(clazz.getName().matches(excludeFilter))) {
+                classes.add(clazz);
+            }
+        }
         return classes;
     }
 
