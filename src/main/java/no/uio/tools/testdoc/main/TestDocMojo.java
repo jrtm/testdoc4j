@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.maven.doxia.sink.Sink;
 import org.apache.maven.doxia.siterenderer.Renderer;
@@ -92,23 +94,53 @@ public class TestDocMojo extends AbstractMavenReport {
     }
 
 
+    public static String currentFolderName() {
+        Matcher matcher = Pattern.compile("/([^/]*)$").matcher(System.getProperty("user.dir"));
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return "";
+    }
+
+
     @Override
     public void executeReport(final Locale locale) throws MavenReportException {
         outputTestDocBannerToLog();
 
         ClassLoader currentThreadClassLoader = Thread.currentThread().getContextClassLoader();
         ClassLoader urlClassLoader = null;
+        String curDir = System.getProperty("user.dir");
+        /* NB: This only works if all jar files needed to run tests are store in */
+        /* ./target/projectname/WEB-INF/lib/ */
+        String jarDirectory = curDir + "/target/" + currentFolderName() + "/WEB-INF/lib/";
         try {
-            String filename = System.getProperty("user.dir") + "/target/test-classes/";
-            URL url = new File(filename).toURI().toURL();
-            urlClassLoader = new URLClassLoader(new URL[] { url }, currentThreadClassLoader);
+            // String filename = System.getProperty("user.dir") + "/target/test-classes/";
+            // URL url = new File(filename).toURI().toURL();
+            // urlClassLoader = new URLClassLoader(new URL[] { url }, currentThreadClassLoader);
+            urlClassLoader = new URLClassLoader(findClassURIs(jarDirectory), currentThreadClassLoader);
         } catch (MalformedURLException e1) {
             e1.printStackTrace();
         }
+
+        /* ------------- */
+        // String className = "no.uio.webapps.meldeapp.blackbox.ITFrontPageTest";
+        // try {
+        // getLog().debug("TestDoc: Reading class: " + urlClassLoader.loadClass(className));
+        // } catch (ClassNotFoundException e1) {
+        // e1.printStackTrace();
+        // }
+        /* ------------- */
+
         Thread.currentThread().setContextClassLoader(urlClassLoader);
+
         Reflections reflections = new Reflections("");
+
         Set<Class<?>> annotated = reflections.getTypesAnnotatedWith(no.uio.tools.testdoc.annotations.TestDocPlan.class);
+
         List classesFound = new ArrayList(annotated);
+
+        classesFound.remove(no.uio.tools.testdoc.examples.AdvancedExample.class);
+
         getLog().info("TestDoc found " + classesFound.size() + " classes with TestDoc annotations.");
 
         try {
@@ -126,6 +158,33 @@ public class TestDocMojo extends AbstractMavenReport {
     }
 
 
+    /* Returns an array with classes and jar files we want to add to classpath when scanning for annotations */
+    private URL[] findClassURIs(String jarDirectory) throws MalformedURLException {
+        File dir = new File(jarDirectory);
+        List<URL> urls = new ArrayList<URL>();
+
+        String curDir = System.getProperty("user.dir");
+        String filename = curDir + "/target/test-classes/";
+        URL url = new File(filename).toURI().toURL();
+        System.out.println("TestDoc 1: adding to classpath: " + url.toString());
+        urls.add(url);
+
+        String[] children = dir.list();
+        if (children == null) {
+            // Either dir does not exist or is not a directory
+        } else {
+            for (int i = 0; i < children.length; i++) {
+                System.out.println("TestDoc 2: adding to classpath: " + jarDirectory + filename);
+                filename = children[i];
+                url = new File(jarDirectory + filename).toURI().toURL();
+                urls.add(url);
+            }
+        }
+
+        return urls.toArray(new URL[0]);
+    }
+
+
     private void outputTestDocBannerToLog() {
         getLog().info(" ________________ ______________________  _______ _______  ");
         getLog().info(" \\__   __/  ____ \\  ____ \\__   __/  __  \\(  ___  )  ____ \\ ");
@@ -135,7 +194,7 @@ public class TestDocMojo extends AbstractMavenReport {
         getLog().info("   | |  | (           ) |  | |  | |   ) | |   | | |        ");
         getLog().info("   | |  | (____/Y\\____) |  | |  | (__/  ) (___) | (____/\\  ");
         getLog().info("   )_(  (_______|_______)  )_(  (______/(_______)_______/  ");
-        getLog().info("  TestDoc - Show the world what your tests does.           ");
+        getLog().info("  TestDoc - Show the world what your tests do. Version 0.2.2");
     }
 
 
