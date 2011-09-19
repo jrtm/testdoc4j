@@ -137,7 +137,7 @@ public class TestDocMojo extends AbstractMavenReport {
 
         Set<Class<?>> annotated = reflections.getTypesAnnotatedWith(no.uio.tools.testdoc.annotations.TestDocPlan.class);
 
-        List classesFound = new ArrayList(annotated);
+        List<Class<?>> classesFound = new ArrayList(annotated);
 
         classesFound.remove(no.uio.tools.testdoc.examples.AdvancedExample.class);
 

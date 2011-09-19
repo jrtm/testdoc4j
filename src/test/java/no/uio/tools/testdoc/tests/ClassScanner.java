@@ -40,7 +40,7 @@ public class ClassScanner {
         HashMap<String, LinkedList<TestDocPlanData>> datamodel = scanClasses(packageName);
 
         String output = processFreemarkerTemplate(datamodel, "testdoc.ftl");
-        // System.out.println(output);
+        System.out.println(output);
         writeFile("/tmp/testplan.html", output);
     }
 
@@ -89,7 +89,7 @@ public class ClassScanner {
 
         // Kommenter inn denne for å lese freemarker template fra filsystem i stedet for
         // jar fil ved utvikling og testing
-        File dir = new File("/Users/thomasfl/workspace/testdoc/src/main/resources/");
+        File dir = new File("/Users/thomasfl/workspace/w3-testdoc/src/main/resources/");
         cfg.setDirectoryForTemplateLoading(dir);
         cfg.setLocalizedLookup(false);
         Template tpl = cfg.getTemplate(template);

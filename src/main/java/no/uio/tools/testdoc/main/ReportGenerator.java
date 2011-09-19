@@ -29,7 +29,7 @@ public class ReportGenerator {
     public static boolean debug = false;
 
 
-    public static String generateTestDocForClasses(List<Class> classes) throws ClassNotFoundException, IOException,
+    public static String generateTestDocForClasses(List<Class<?>> classes) throws ClassNotFoundException, IOException,
             TemplateException {
         HashMap<String, LinkedList<TestDocPlanData>> datamodel = scanClasses(classes);
         String output = processFreemarkerTemplate(datamodel, "testdoc.ftl");

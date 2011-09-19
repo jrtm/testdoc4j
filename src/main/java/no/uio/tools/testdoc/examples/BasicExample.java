@@ -5,11 +5,11 @@ import no.uio.tools.testdoc.annotations.TestDocTask;
 import no.uio.tools.testdoc.annotations.TestDocTasks;
 import no.uio.tools.testdoc.annotations.TestDocTest;
 
-@TestDocPlan(title = "Basic example - authentication tests")
+@TestDocPlan(title = "Basic TestDoc example with this title")
 public class BasicExample {
 
-    @TestDocTest("Test user login")
-    @TestDocTasks({ @TestDocTask(task = "Go to login page", checks = "Check 1") })
+    @TestDocTest("Test description")
+    @TestDocTasks({ @TestDocTask(task = "Task description", checks = "Desired behaviour description") })
     public void testUserLogin() {
         // Testcode here
         assert (true);

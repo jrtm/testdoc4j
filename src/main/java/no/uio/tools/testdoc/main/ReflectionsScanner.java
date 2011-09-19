@@ -20,7 +20,9 @@ public class ReflectionsScanner {
 
     public static void main(final String[] args) throws ClassNotFoundException, IOException, TemplateException {
         System.out.println("TestDoc: Generating documenation.");
-        List<Class> classesFound = findAllTestDocClassesInClasspath("no.uio.tools.testdoc.examples"); // no.uio.tools.testdoc.examples
+        // List<Class<?>> classesFound = findAllTestDocClassesInClasspath("no.uio.tools.testdoc.examples"); //
+        // no.uio.tools.testdoc.examples
+        List<Class<?>> classesFound = AnnotationsScanner.findAllAnnotatedClasses();
         String html = ReportGenerator.generateTestDocForClasses(classesFound);
         String filename = "testplan_test.html";
         ReportGenerator.writeFile(filename, html);

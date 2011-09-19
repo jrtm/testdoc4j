@@ -9,7 +9,7 @@ import no.uio.tools.testdoc.annotations.TestDocTest;
 
 import org.junit.Test;
 
-@TestDocPlan(title = "Advanced example", sortOrder = 2)
+@TestDocPlan(title = "Advanced TestDoc example", sortOrder = 2)
 public class AdvancedExample {
 
     public static void toBeImplemented() {
@@ -17,20 +17,20 @@ public class AdvancedExample {
 
 
     @Test
-    @TestDocTest("Test user login")
-    @TestDocTasks({ @TestDocTask(task = "Go to login page", checks = "Everything looks ok"),
-            @TestDocTask(task = "Type wrong password", checks = { "See error message", "Check2" }) })
-    public void userLogin() {
-        assertTrue(true);
+    @TestDocTest("First test description")
+    @TestDocTask(task = "Single task description", checks = "Desired behaviour")
+    public void userLogout() {
+        int i = 10;
+        i = i + 2;
     }
 
 
     @Test
-    @TestDocTest("Test user logout")
-    @TestDocTasks({ @TestDocTask(task = "Click logout link", checks = "Look for goodbye message") })
-    public void userLogout() {
-        int i = 10;
-        i = i + 2;
+    @TestDocTest("Second test description")
+    @TestDocTasks({ @TestDocTask(task = "First task", checks = "Single check"),
+            @TestDocTask(task = "Second task", checks = { "First check", "Second check" }) })
+    public void userLogin() {
+        assertTrue(true);
     }
 
 
