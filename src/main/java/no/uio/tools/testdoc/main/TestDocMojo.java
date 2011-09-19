@@ -8,7 +8,6 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,7 +16,6 @@ import org.apache.maven.doxia.siterenderer.Renderer;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.reporting.AbstractMavenReport;
 import org.apache.maven.reporting.MavenReportException;
-import org.reflections.Reflections;
 
 import freemarker.template.TemplateException;
 
@@ -133,11 +131,14 @@ public class TestDocMojo extends AbstractMavenReport {
 
         Thread.currentThread().setContextClassLoader(urlClassLoader);
 
-        Reflections reflections = new Reflections("");
+        List<Class<?>> classesFound = AnnotationsScanner.findAllAnnotatedClasses();
 
-        Set<Class<?>> annotated = reflections.getTypesAnnotatedWith(no.uio.tools.testdoc.annotations.TestDocPlan.class);
-
-        List<Class<?>> classesFound = new ArrayList(annotated);
+        // Reflections reflections = new Reflections("");
+        //
+        // Set<Class<?>> annotated =
+        // reflections.getTypesAnnotatedWith(no.uio.tools.testdoc.annotations.TestDocPlan.class);
+        //
+        // List<Class<?>> classesFound = new ArrayList(annotated);
 
         classesFound.remove(no.uio.tools.testdoc.examples.AdvancedExample.class);
 

@@ -1,6 +1,5 @@
 package no.uio.tools.testdoc.main;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -62,37 +61,11 @@ public class AnnotationsScanner {
     }
 
 
-    public static TestDocPlanData getAnnotationsFromClass(Class clazz) throws ClassNotFoundException {
-        if (debug) {
-            System.out.println("TestDoc: loading class explicitly...");
-            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-            clazz = classLoader.loadClass("no.uio.tools.testdoc.examples.AdvancedExample");
-            System.out.println("TestDoc: reading annotations... ");
-        }
+    public static TestDocPlanData getAnnotationsFromClass(Class<?> clazz) throws ClassNotFoundException {
 
         TestDocPlanData testDocPlanData = new TestDocPlanData();
         LinkedList<TestDocTestData> testsList = new LinkedList<TestDocTestData>();
         TestDocPlan testdocPlan = (TestDocPlan) clazz.getAnnotation(TestDocPlan.class);
-
-        if (debug) {
-            try {
-
-                System.out.println("testdoc: clazz.getAnnotations().toString(): ");
-                Annotation[] annotations = clazz.getAnnotations();
-                for (int i = 0; i < annotations.length; i++) {
-                    System.out.println(i + " = " + annotations[i].toString());
-                }
-                if (testdocPlan == null) {
-                    System.out.println("testdocPlan == null");
-                }
-
-                System.out.println("TestDoc reading title: '" + testdocPlan.title() + "'");
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new ClassNotFoundException();
-            }
-
-        }
 
         if (testdocPlan != null) {
             if (testdocPlan.title() != null) {
@@ -107,11 +80,7 @@ public class AnnotationsScanner {
         int testsCount = 0;
 
         Method[] methods = null;
-        try {
-            methods = clazz.getMethods();
-        } catch (NoClassDefFoundError e) {
-            // TODO: handle exception
-        }
+        methods = clazz.getMethods();
         if (methods == null) {
             return null;
         }
