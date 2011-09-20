@@ -8,17 +8,20 @@
       <h2 style="color:red;">(No title)</h2>
     </#if>
     <#if testplan.className?exists>
-    <p><em>Class: ${testplan.className}</em></p>
+      <p><em>Class: ${testplan.className}</em></p>
     </#if>
-    
-    <table cellpadding="3" border="1">
-    <tr align="left">
-       <td><b>No.</b></td>
-       <td><b>Test</b></td>
-       <td><b>Action</b></td>
-       <td><b>Desired result</b></td>
+
+    <#assign row_class="a">
+        
+    <table cellpadding="3" border="0" class="bodyTable">
+    <tbody>
+    <tr align="left" class="a">
+       <th>No.</th>
+       <th>Test</th>
+       <th>Action</th>
+       <th>Desired result</th>
     </tr>
-    
+
     <#if testplan.getTests()?exists>
         <#list testplan.getTests() as test>
         
@@ -74,9 +77,9 @@
         
         
     </#if>
-    
-        </table>
-        </#list>
+    <tbody>
+    </table>
+    </#list>
 
     </#if>
 

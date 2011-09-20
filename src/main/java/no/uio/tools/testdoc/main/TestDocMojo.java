@@ -1,6 +1,7 @@
 package no.uio.tools.testdoc.main;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -13,6 +14,8 @@ import java.util.regex.Pattern;
 
 import org.apache.maven.doxia.sink.Sink;
 import org.apache.maven.doxia.siterenderer.Renderer;
+import org.apache.maven.model.Model;
+import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.reporting.AbstractMavenReport;
 import org.apache.maven.reporting.MavenReportException;
@@ -107,39 +110,15 @@ public class TestDocMojo extends AbstractMavenReport {
 
         ClassLoader currentThreadClassLoader = Thread.currentThread().getContextClassLoader();
         ClassLoader urlClassLoader = null;
-        String curDir = System.getProperty("user.dir");
-        /* NB: This only works if all jar files needed to run tests are store in */
-        /* ./target/projectname/WEB-INF/lib/ */
-        String jarDirectory = curDir + "/target/" + currentFolderName() + "/WEB-INF/lib/";
+        String libFolder = locateLibFolder();
         try {
-            // String filename = System.getProperty("user.dir") + "/target/test-classes/";
-            // URL url = new File(filename).toURI().toURL();
-            // urlClassLoader = new URLClassLoader(new URL[] { url }, currentThreadClassLoader);
-            urlClassLoader = new URLClassLoader(findClassURIs(jarDirectory), currentThreadClassLoader);
+            urlClassLoader = new URLClassLoader(findClassURIs(libFolder), currentThreadClassLoader);
         } catch (MalformedURLException e1) {
             e1.printStackTrace();
         }
 
-        /* ------------- */
-        // String className = "no.uio.webapps.meldeapp.blackbox.ITFrontPageTest";
-        // try {
-        // getLog().debug("TestDoc: Reading class: " + urlClassLoader.loadClass(className));
-        // } catch (ClassNotFoundException e1) {
-        // e1.printStackTrace();
-        // }
-        /* ------------- */
-
         Thread.currentThread().setContextClassLoader(urlClassLoader);
-
         List<Class<?>> classesFound = AnnotationsScanner.findAllAnnotatedClasses();
-
-        // Reflections reflections = new Reflections("");
-        //
-        // Set<Class<?>> annotated =
-        // reflections.getTypesAnnotatedWith(no.uio.tools.testdoc.annotations.TestDocPlan.class);
-        //
-        // List<Class<?>> classesFound = new ArrayList(annotated);
-
         classesFound.remove(no.uio.tools.testdoc.examples.AdvancedExample.class);
 
         getLog().info("TestDoc found " + classesFound.size() + " classes with TestDoc annotations.");
@@ -156,6 +135,33 @@ public class TestDocMojo extends AbstractMavenReport {
             e1.printStackTrace();
         }
 
+    }
+
+
+    /* TestDoc needs access to a folder with all necessary jar files and load them with classloader. */
+    public static String locateLibFolder() {
+        File pomfile = new File(System.getProperty("user.dir") + "/pom.xml");
+        Model model = null;
+        FileReader reader = null;
+        MavenXpp3Reader mavenreader = new MavenXpp3Reader();
+        try {
+            reader = new FileReader(pomfile);
+            model = mavenreader.read(reader);
+            model.setPomFile(pomfile);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        File dir = new File(System.getProperty("user.dir") + "/target/");
+        if (!dir.exists()) {
+            System.err.println("./target/ directory does not exists. Please run 'mvn package' to create it.");
+        }
+
+        String libFolder = System.getProperty("user.dir") + "/target/" + model.getArtifactId() + "/WEB-INF/lib/";
+        dir = new File(libFolder);
+        if (!dir.exists()) {
+            System.err.println("Directory " + libFolder + " does not exists. Please run 'mvn package' to create it.");
+        }
+        return libFolder;
     }
 
 
@@ -187,8 +193,8 @@ public class TestDocMojo extends AbstractMavenReport {
 
 
     private void outputTestDocBannerToLog() {
-        getLog().info(" ________________ ______________________  _______ _______  ");
-        getLog().info(" \\__   __/  ____ \\  ____ \\__   __/  __  \\(  ___  )  ____ \\ ");
+        getLog().info("________________ ______________________  _______ _______  ");
+        getLog().info("\\__   __/  ____ \\  ____ \\__   __/  __  \\(  ___  )  ____ \\ ");
         getLog().info("   ) (  | (    \\/ (    \\/  ) (  | (  \\  ) (   ) | (    \\/  ");
         getLog().info("   | |  | (__   | (_____   | |  | |   ) | |   | | |        ");
         getLog().info("   | |  |  __)  (_____  )  | |  | |   | | |   | | |        ");

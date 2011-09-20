@@ -44,4 +44,17 @@ public class AdvancedExample {
         assertTrue(true);
     }
 
+
+    @Test
+    @TestDocTest("Test with no tasks and checks")
+    public void svadaTest() {
+        assertTrue(true);
+    }
+
+
+    @Test
+    @TestDocTask(task = "Tasks with no description", checks = "Desired behaviour")
+    public void loremIpsumTest() {
+    }
+
 }
