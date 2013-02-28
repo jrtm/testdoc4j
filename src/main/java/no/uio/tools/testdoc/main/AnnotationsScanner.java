@@ -2,6 +2,7 @@ package no.uio.tools.testdoc.main;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -13,6 +14,7 @@ import no.uio.tools.testdoc.annotations.TestDocTest;
 import no.uio.tools.testdoc.data.TestDocPlanData;
 import no.uio.tools.testdoc.data.TestDocTaskData;
 import no.uio.tools.testdoc.data.TestDocTestData;
+import no.uio.tools.testdoc.util.MethodOrderComparator;
 
 import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
@@ -36,7 +38,8 @@ public class AnnotationsScanner {
     }
 
 
-    private static void findClassesAnnotatedWithTestDocPlan(Reflections reflections, List<Class<?>> annotatedClasses) {
+    private static void findClassesAnnotatedWithTestDocPlan(final Reflections reflections,
+            final List<Class<?>> annotatedClasses) {
         Set<Class<?>> annotated = reflections.getTypesAnnotatedWith(no.uio.tools.testdoc.annotations.TestDocPlan.class);
         for (Class<?> clazz : annotated) {
             if (!annotatedClasses.contains(clazz)) {
@@ -46,7 +49,7 @@ public class AnnotationsScanner {
     }
 
 
-    private static List<Class<?>> findClassesAnnotatedWithTestDocTest(Reflections reflections) {
+    private static List<Class<?>> findClassesAnnotatedWithTestDocTest(final Reflections reflections) {
         Set<Method> annotatedMethods = reflections
                 .getMethodsAnnotatedWith(no.uio.tools.testdoc.annotations.TestDocTest.class);
 
@@ -61,11 +64,11 @@ public class AnnotationsScanner {
     }
 
 
-    public static TestDocPlanData getAnnotationsFromClass(Class<?> clazz) throws ClassNotFoundException {
+    public static TestDocPlanData getAnnotationsFromClass(final Class<?> clazz) throws ClassNotFoundException {
 
         TestDocPlanData testDocPlanData = new TestDocPlanData();
         LinkedList<TestDocTestData> testsList = new LinkedList<TestDocTestData>();
-        TestDocPlan testdocPlan = (TestDocPlan) clazz.getAnnotation(TestDocPlan.class);
+        TestDocPlan testdocPlan = clazz.getAnnotation(TestDocPlan.class);
 
         if (testdocPlan != null) {
             if (testdocPlan.title() != null) {
@@ -77,8 +80,6 @@ public class AnnotationsScanner {
             testDocPlanData.setTitle(null);
         }
 
-        int testsCount = 0;
-
         Method[] methods = null;
         methods = clazz.getMethods();
         if (methods == null) {
@@ -87,18 +88,19 @@ public class AnnotationsScanner {
 
         for (Method m : methods) {
             TestDocTestData testDocTestData = new TestDocTestData();
+            testDocTestData.setMethodName(m.getName());
 
-            TestDocTest testDocTest = (TestDocTest) m.getAnnotation(TestDocTest.class);
+            TestDocTest testDocTest = m.getAnnotation(TestDocTest.class);
             if (testDocTest != null) {
                 testDocTestData.setTitle(testDocTest.value());
             }
 
-            TestDocTasks testDocTasks = (TestDocTasks) m.getAnnotation(TestDocTasks.class);
+            TestDocTasks testDocTasks = m.getAnnotation(TestDocTasks.class);
 
             LinkedList<TestDocTaskData> tasksLists = new LinkedList<TestDocTaskData>();
             if (testDocTasks != null) {
 
-                TestDocTask[] tasks = (TestDocTask[]) testDocTasks.value();
+                TestDocTask[] tasks = testDocTasks.value();
 
                 for (int i = 0; i < tasks.length; i++) {
                     TestDocTaskData taskData = new TestDocTaskData();
@@ -118,7 +120,7 @@ public class AnnotationsScanner {
             }
 
             /* If unit test has a single TestDocTask annoation, then add it to the list. */
-            TestDocTask testDocTask = (TestDocTask) m.getAnnotation(TestDocTask.class);
+            TestDocTask testDocTask = m.getAnnotation(TestDocTask.class);
             if (testDocTask != null) {
                 TestDocTaskData taskData = new TestDocTaskData();
                 taskData.setTitle(testDocTask.task());
@@ -140,14 +142,13 @@ public class AnnotationsScanner {
             }
 
             if (testDocTestData.getTitle() != null || testDocTestData.getTasks() != null) {
-                testsCount = testsCount + 1;
-                testDocTestData.setNumber(testsCount);
                 testDocPlanData.setClassName(clazz.getName());
                 testsList.add(testDocTestData);
             }
 
         }
         if (testsList.size() > 0) {
+            sortTestsListForClass(clazz, testsList);
             testDocPlanData.setTests(testsList);
             testDocPlanData.setClassName(clazz.getName());
         }
@@ -155,5 +156,18 @@ public class AnnotationsScanner {
             return null;
         }
         return testDocPlanData;
+    }
+
+
+    private static void sortTestsListForClass(final Class<?> clazz, final LinkedList<TestDocTestData> testsList) {
+        MethodOrderComparator<TestDocTestData> comparator = new MethodOrderComparator<TestDocTestData>(clazz);
+        if (comparator.canSort()) {
+            Collections.sort(testsList, comparator);
+        }
+
+        int testsCount = 0;
+        for (TestDocTestData test : testsList) {
+            test.setNumber(++testsCount);
+        }
     }
 }

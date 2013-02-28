@@ -25,7 +25,7 @@
 	<artifactId>testdoc</artifactId>
 	<packaging>maven-plugin</packaging>
 
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.5-SNAPSHOT</version>
 	<name>testdoc</name>
 	<url>http://maven.apache.org</url>
 
@@ -41,6 +41,23 @@
 			<url>http://reflections.googlecode.com/svn/repo</url>
 		</repository>
 	</repositories>
+    <distributionManagement>
+                    <!--
+    Kommentert ut på grunn av http://jira.codehaus.org/browse/MNG-4508
+                    <site>
+                        <id>repo.usit.uio.no</id>
+                        <url>scpexe://repo.usit.uio.no/www/var/virtual/no.uio.utv_80/htdocs/maven-sites/${project.artifactId}</url>
+                    </site>
+    -->
+        <repository>
+            <id>repo.usit.uio.no</id>
+            <url>https://repo.usit.uio.no/nexus/content/repositories/internal-release</url>
+        </repository>
+        <snapshotRepository>
+            <id>repo.usit.uio.no</id>
+            <url>https://repo.usit.uio.no/nexus/content/repositories/internal-snapshot</url>
+        </snapshotRepository>
+    </distributionManagement>
 	<dependencies>
 
 		<!--
@@ -145,11 +162,10 @@
 	<reporting>
 		<plugins>
 
-
 			<plugin>
 				<groupId>no.uio.tools</groupId>
 				<artifactId>testdoc</artifactId>
-				<version>0.0.2-SNAPSHOT</version>
+				<version>0.0.5-SNAPSHOT</version>
 			</plugin>
 
 			<plugin>
@@ -185,8 +201,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.3.2</version>
 				<configuration>
-					<source>1.5</source>
-					<target>1.5</target>
+					<source>1.6</source>
+					<target>1.6</target>
 					<encoding>utf-8</encoding>
 				</configuration>
 			</plugin>
