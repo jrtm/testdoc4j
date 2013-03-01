@@ -90,7 +90,7 @@
         
         
     </#if>
-    <tbody>
+    </tbody>
     </table>
     </#list>
 
