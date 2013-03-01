@@ -2,7 +2,7 @@ package no.uio.tools.testdoc.data;
 
 import java.util.LinkedList;
 
-public class TestDocPlanData implements Comparable<TestDocPlanData> {
+public class TestDocPlanData implements Comparable {
 
     private String title;
     private int sortOrder;
@@ -10,7 +10,7 @@ public class TestDocPlanData implements Comparable<TestDocPlanData> {
     private LinkedList<TestDocTestData> tests;
 
 
-    public void setTitle(final String title) {
+    public void setTitle(String title) {
         this.title = title;
     }
 
@@ -20,7 +20,7 @@ public class TestDocPlanData implements Comparable<TestDocPlanData> {
     }
 
 
-    public void setTests(final LinkedList<TestDocTestData> tests) {
+    public void setTests(LinkedList<TestDocTestData> tests) {
         this.tests = tests;
     }
 
@@ -30,7 +30,7 @@ public class TestDocPlanData implements Comparable<TestDocPlanData> {
     }
 
 
-    public void setClassName(final String className) {
+    public void setClassName(String className) {
         this.className = className;
     }
 
@@ -40,7 +40,7 @@ public class TestDocPlanData implements Comparable<TestDocPlanData> {
     }
 
 
-    public void setSortOrder(final int sortOrder) {
+    public void setSortOrder(int sortOrder) {
         this.sortOrder = sortOrder;
     }
 
@@ -50,7 +50,8 @@ public class TestDocPlanData implements Comparable<TestDocPlanData> {
     }
 
 
-    public int compareTo(final TestDocPlanData other) {
+    public int compareTo(Object o) {
+        TestDocPlanData other = (TestDocPlanData) o;
         return this.sortOrder - other.getSortOrder();
     }
 

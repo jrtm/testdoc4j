@@ -7,21 +7,23 @@ import no.uio.tools.testdoc.util.MethodWrapper;
 
 public class TestDocTestData implements MethodWrapper {
 
-    private String methodName;
     private String title;
     private int number;
+    private boolean implemented;
+
+    private String methodName;
+
+
+    public boolean isImplemented() {
+        return implemented;
+    }
+
+
+    public void setImplemented(final boolean implemented) {
+        this.implemented = implemented;
+    }
 
     private LinkedList<TestDocTaskData> tasks;
-
-
-    public void setMethodName(final String methodName) {
-        this.methodName = methodName;
-    }
-
-
-    public String getMethodName() {
-        return methodName;
-    }
 
 
     public void setTitle(final String title) {
@@ -51,6 +53,16 @@ public class TestDocTestData implements MethodWrapper {
 
     public int getNumber() {
         return number;
+    }
+
+
+    public String getMethodName() {
+        return methodName;
+    }
+
+
+    public void setMethodName(final String methodName) {
+        this.methodName = methodName;
     }
 
 

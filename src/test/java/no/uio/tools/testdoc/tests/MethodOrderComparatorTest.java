@@ -16,7 +16,7 @@ public class MethodOrderComparatorTest {
 
     @Test
     public void testMethodSorting() {
-        String[] ordered = { "toBeImplemented", "userLogout", "userLogin", "search", "svadaTest", "loremIpsumTest" };
+        String[] ordered = { "toBeImplemented", "userLogin", "userLogout", "search", "svadaTest", "loremIpsumTest" };
         List<MockMethod> methods = toMockMethods(ordered);
         MethodOrderComparator<MockMethod> comparator = new MethodOrderComparator<MockMethod>(AdvancedExample.class);
 

@@ -18,6 +18,7 @@ import java.util.List;
 import no.uio.tools.testdoc.data.TestDocPlanData;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.maven.reporting.MavenReportException;
 
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.template.Configuration;
@@ -29,17 +30,17 @@ public class ReportGenerator {
     public static boolean debug = false;
 
 
-    public static String generateTestDocForClasses(List<Class<?>> classes) throws ClassNotFoundException, IOException,
-            TemplateException {
-        HashMap<String, LinkedList<TestDocPlanData>> datamodel = scanClasses(classes);
+    public static String generateTestDocForClasses(List<Class<?>> classes, boolean failIfMissingTestPlanTitle)
+            throws ClassNotFoundException, IOException, TemplateException, MavenReportException {
+        HashMap<String, LinkedList<TestDocPlanData>> datamodel = scanClasses(classes, failIfMissingTestPlanTitle);
         String output = processFreemarkerTemplate(datamodel, "testdoc.ftl");
         return output;
     }
 
 
     @SuppressWarnings("rawtypes")
-    public static HashMap<String, LinkedList<TestDocPlanData>> scanClasses(List classes) throws ClassNotFoundException,
-            IOException {
+    public static HashMap<String, LinkedList<TestDocPlanData>> scanClasses(List classes,
+            boolean failIfMissingTestPlanTitle) throws ClassNotFoundException, IOException, MavenReportException {
 
         HashMap<String, LinkedList<TestDocPlanData>> datamodel = new HashMap<String, LinkedList<TestDocPlanData>>();
         LinkedList<TestDocPlanData> testplans = new LinkedList<TestDocPlanData>();
@@ -50,7 +51,8 @@ public class ReportGenerator {
             if (debug == true) {
                 System.out.println("TestDoc: Scanning: " + className);
             }
-            TestDocPlanData testDocPlanData = AnnotationsScanner.getAnnotationsFromClass(clazz);
+            TestDocPlanData testDocPlanData = AnnotationsScanner.getAnnotationsFromClass(clazz,
+                    failIfMissingTestPlanTitle);
             if (testDocPlanData != null) {
                 if (debug == true) {
                     System.out.println("Reading: " + className);
@@ -88,7 +90,7 @@ public class ReportGenerator {
 
         cfg.setLocalizedLookup(false);
 
-        String templateText = readTextFromJar("/" + template);
+        String templateText = readTextResource("/" + template);
         Template tpl = new Template(template, new StringReader(templateText), cfg);
         tpl.process(datamodel, output);
         return output.toString();
@@ -107,7 +109,7 @@ public class ReportGenerator {
 
 
     /* Reads text file from jar archive. Used to read template files. */
-    public static String readTextFromJar(String s) {
+    public static String readTextResource(String s) {
         InputStream is = null;
         BufferedReader br = null;
         String line;

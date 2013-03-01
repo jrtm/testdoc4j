@@ -3,31 +3,67 @@ package no.uio.tools.testdoc.main;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.maven.plugin.logging.Log;
+import org.apache.maven.reporting.MavenReportException;
+
 import freemarker.template.TemplateException;
 
 public class TestDocRunner {
 
-    public static void main(final String[] args) throws ClassNotFoundException, IOException, TemplateException {
-        outputTestDocBanner();
-        System.out.println("TestDoc: Generating documenation.");
-        List<Class<?>> classesFound = AnnotationsScanner.findAllAnnotatedClasses();
-        String html = ReportGenerator.generateTestDocForClasses(classesFound);
-        String filename = "testplan_test.html";
-        ReportGenerator.writeFile(filename, html);
-        System.out.println("Output to '" + filename + "'.");
+    private Log log;
+    private boolean failIfMissingTestPlanTitle;
+
+
+    public TestDocRunner(Log log, boolean failIfMissingTestPlanTitle) {
+        this.log = log;
+        this.failIfMissingTestPlanTitle = failIfMissingTestPlanTitle;
     }
 
 
-    private static void outputTestDocBanner() {
-        System.out.println("________________ ______________________  _______ _______  ");
-        System.out.println("\\__   __/  ____ \\  ____ \\__   __/  __  \\(  ___  )  ____ \\ ");
-        System.out.println("   ) (  | (    \\/ (    \\/  ) (  | (  \\  ) (   ) | (    \\/  ");
-        System.out.println("   | |  | (__   | (_____   | |  | |   ) | |   | | |        ");
-        System.out.println("   | |  |  __)  (_____  )  | |  | |   | | |   | | |        ");
-        System.out.println("   | |  | (           ) |  | |  | |   ) | |   | | |        ");
-        System.out.println("   | |  | (____/Y\\____) |  | |  | (__/  ) (___) | (____/\\  ");
-        System.out.println("   )_(  (_______|_______)  )_(  (______/(_______)_______/  ");
-        System.out.println("  TestDoc - Show the world what your tests do. Version 0.2.2");
+    public void execute() throws ClassNotFoundException, IOException, TemplateException, MavenReportException {
+        outputTestDocBanner();
+        TestDocClassLoader.loadClassesFromTargetFolder();
+        List<Class<?>> classesFound = AnnotationsScanner.findAllAnnotatedClasses();
+        String html = ReportGenerator.generateTestDocForClasses(classesFound, failIfMissingTestPlanTitle);
+        String filename = "testdoc_testplan.html";
+
+        String header = ReportGenerator.readTextResource("/header.html");
+        String footer = ReportGenerator.readTextResource("/footer.html");
+        ReportGenerator.writeFile(filename, header + html + footer);
+        puts("TestDoc: Output report to '" + filename + "'.");
+    }
+
+
+    public static void main(final String[] args) throws ClassNotFoundException, IOException, TemplateException {
+        TestDocRunner testDocRunner = new TestDocRunner(null, false);
+        try {
+            testDocRunner.execute();
+        } catch (MavenReportException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+
+    private void outputTestDocBanner() {
+        puts("________________ ______________________  _______ _______  ");
+        puts("\\__   __/  ____ \\  ____ \\__   __/  __  \\(  ___  )  ____ \\ ");
+        puts("   ) (  | (    \\/ (    \\/  ) (  | (  \\  ) (   ) | (    \\/  ");
+        puts("   | |  | (__   | (_____   | |  | |   ) | |   | | |        ");
+        puts("   | |  |  __)  (_____  )  | |  | |   | | |   | | |        ");
+        puts("   | |  | (           ) |  | |  | |   ) | |   | | |        ");
+        puts("   | |  | (____/Y\\____) |  | |  | (__/  ) (___) | (____/\\  ");
+        puts("   )_(  (_______|_______)  )_(  (______/(_______)_______/  ");
+        puts("  TestDoc - Show the world what your tests do. Version 0.2.5 (Testrunner)");
+        puts("");
+    }
+
+
+    private void puts(String string) {
+        if (log == null) {
+            System.out.println(string);
+        } else {
+            log.info(string);
+        }
     }
 
 }
