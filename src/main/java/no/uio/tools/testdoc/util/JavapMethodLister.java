@@ -45,7 +45,7 @@ public abstract class JavapMethodLister implements MethodLister {
 
     protected abstract String[] getJavapProcessParametersForClass(final Class<?> clazz);
 
-    static class Sun extends JavapMethodLister {
+    static class OracleJDK extends JavapMethodLister {
 
         @Override
         protected String[] getJavapProcessParametersForClass(final Class<?> clazz) {
@@ -88,7 +88,7 @@ public abstract class JavapMethodLister implements MethodLister {
     }
 
 
-    private static boolean isSunJavap() {
+    private static boolean isOracleJDK() {
         try {
             Process javap = Runtime.getRuntime().exec(new String[] { DECOMPILER, "-version" });
             BufferedReader reader = new BufferedReader(new InputStreamReader(javap.getInputStream()));
@@ -96,6 +96,7 @@ public abstract class JavapMethodLister implements MethodLister {
             reader.close();
             javap.destroy();
 
+            // "javap -version" only exists for OpenJDK, so we can use this to check for OracleJDK
             return version.contains("Usage:");
 
         } catch (Exception e) {
@@ -107,9 +108,11 @@ public abstract class JavapMethodLister implements MethodLister {
     public static JavapMethodLister getInstance() {
         if (instance != null) {
             return instance;
-        } else if (isSunJavap()) {
-            System.out.println("[DEBUG] Using Sun javap");
-            instance = new Sun();
+
+        } else if (isOracleJDK()) {
+            System.out.println("[DEBUG] Using OracleJDK javap");
+            instance = new OracleJDK();
+
         } else {
             System.out.println("[DEBUG] Using OpenJDK javap");
             instance = new OpenJDK();

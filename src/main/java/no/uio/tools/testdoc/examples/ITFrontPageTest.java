@@ -6,15 +6,11 @@ import no.uio.tools.testdoc.annotations.TestDocTask;
 import no.uio.tools.testdoc.annotations.TestDocTasks;
 import no.uio.tools.testdoc.annotations.TestDocTest;
 
-import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 
 @TestDocPlan(title = "Test av førstesiden inkludert søking!", sortOrder = -1)
 public class ITFrontPageTest {
-
-    private static final Logger logger = Logger.getLogger(ITFrontPageTest.class);
-
 
     // hentet tester fra https://www.uio.no/tjenester/it/applikasjoner/meldeapp/drift-utvikling/test/testplan.html
     @Test

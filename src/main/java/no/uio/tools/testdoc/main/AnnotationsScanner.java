@@ -102,14 +102,14 @@ public class AnnotationsScanner {
                 testDocPlanData.setTitle(testdocPlan.title());
             }
             testDocPlanData.setSortOrder(testdocPlan.sortOrder());
-            testDocPlanData.setClassName(clazz.getName());
+            testDocPlanData.setClazz(clazz);
         } else {
             testDocPlanData.setTitle(null);
         }
 
         if (failIfMissingTestPlanTitle && (testDocPlanData.getTitle() == null || testDocPlanData.getTitle().equals(""))) {
             throw new MavenReportException("TestDoc Error: Missing tag @TestDocplan(title=...) in class "
-                    + testDocPlanData.getClassName());
+                    + testDocPlanData.getClazz());
         }
 
         int testsCount = 0;
@@ -190,15 +190,16 @@ public class AnnotationsScanner {
                 if (testDocTestData.getTitle() != null || testDocTestData.getTasks() != null) {
                     testsCount = testsCount + 1;
                     testDocTestData.setNumber(testsCount);
-                    testDocPlanData.setClassName(clazz.getName());
+                    testDocPlanData.setClazz(clazz);
                     testsList.add(testDocTestData);
                 }
             }
         }
         if (testsList.size() > 0) {
+            System.out.println(clazz.getName() + ": " + testsList.size() + " tests");
             sortTestDocTestData(clazz, testsList);
             testDocPlanData.setTests(testsList);
-            testDocPlanData.setClassName(clazz.getName());
+            testDocPlanData.setClazz(clazz);
         }
         if (testDocPlanData.getTitle() == null && testDocPlanData.getTests() == null) {
             return null;

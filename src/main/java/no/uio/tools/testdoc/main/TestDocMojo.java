@@ -74,7 +74,7 @@ public class TestDocMojo extends AbstractMavenReport {
     /* Executed when running 'mvn site'from the command line */
     @Override
     public void executeReport(final Locale locale) throws MavenReportException {
-        outputTestDocBannerToLog();
+        TestDoc.outputBanner(getLog(), "mvn site");
 
         TestDocClassLoader.loadClassesFromTargetFolder();
 
@@ -104,7 +104,7 @@ public class TestDocMojo extends AbstractMavenReport {
     }
 
 
-    public static void generateTestDocReport(final Sink sink, String htmlReport) {
+    public static void generateTestDocReport(final Sink sink, final String htmlReport) {
         sink.head();
         sink.title();
         sink.text("TestDoc Testplan");
@@ -156,19 +156,6 @@ public class TestDocMojo extends AbstractMavenReport {
     }
 
 
-    private void outputTestDocBannerToLog() {
-        getLog().info("________________ ______________________  _______ _______  ");
-        getLog().info("\\__   __/  ____ \\  ____ \\__   __/  __  \\(  ___  )  ____ \\ ");
-        getLog().info("   ) (  | (    \\/ (    \\/  ) (  | (  \\  ) (   ) | (    \\/  ");
-        getLog().info("   | |  | (__   | (_____   | |  | |   ) | |   | | |        ");
-        getLog().info("   | |  |  __)  (_____  )  | |  | |   | | |   | | |        ");
-        getLog().info("   | |  | (           ) |  | |  | |   ) | |   | | |        ");
-        getLog().info("   | |  | (____/Y\\____) |  | |  | (__/  ) (___) | (____/\\  ");
-        getLog().info("   )_(  (_______|_______)  )_(  (______/(_______)_______/  ");
-        getLog().info("  TestDoc - Show the world what your tests do. Version 0.2.7 (mvn site)");
-    }
-
-
     @Override
     protected String getOutputDirectory() {
         return outputDirectory.getAbsolutePath();
@@ -193,7 +180,7 @@ public class TestDocMojo extends AbstractMavenReport {
     }
 
 
-    public void setForceTestPlanTitle(String forceTestPlanTitle) {
+    public void setForceTestPlanTitle(final String forceTestPlanTitle) {
         this.forceTestPlanTitle = forceTestPlanTitle;
     }
 

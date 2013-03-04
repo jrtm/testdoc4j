@@ -1,14 +1,28 @@
 <#-- include "/header.ftl" -->
 
 <#if testplans?exists>
+
+<ol>
 <#list testplans as testplan>
+    <#if testplan.title?? && testplan.getTests()?? && (testplan.getTests()?size >0) >
+        <li>
+            <a href="#doc-${testplan.sortOrder}"><b>${testplan.title}</b></a>
+            <#if testplan.clazz??> <em>(${testplan.clazz.getSimpleName()})</em></#if>
+        </li>
+    </#if>
+</#list>
+</ol>
+
+
+<#list testplans as testplan>
+<div id="doc-${testplan.sortOrder}">
     <#if testplan.title?exists>
       <h2>${testplan.title}</h2>
     <#else>
       <h2>(No title)</h2>
     </#if>
-    <#if testplan.className?exists>
-      <p><em>Class: ${testplan.className}</em></p>
+    <#if testplan.clazz??>
+      <p><em>Class: ${testplan.clazz.getName()}</em></p>
     </#if>
 
     <#assign box_id=1>
@@ -35,7 +49,7 @@
         </#if>
         
         
-        <tr valign="top" <#if (test.isImplemented() == false)> style="color:grey;" </#if> class="${row_class}">
+        <tr valign="top" <#if (test.isImplemented() == false)> style="color:grey;" </#if> class="${row_class}" id="doc-${testplan.sortOrder}-${test.number}">
            <td<#if (test.getTasks()?exists)><#if (test.getTasks()?size > 1)> rowspan="${test.checksCount}"</#if></#if> >
              ${test.number}
            </td>
@@ -92,8 +106,8 @@
     </#if>
     </tbody>
     </table>
-    </#list>
-
-    </#if>
+</div>
+</#list>
+</#if>
 
 <#-- include "/footer.ftl" -->
