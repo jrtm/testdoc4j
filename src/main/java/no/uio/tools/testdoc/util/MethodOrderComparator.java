@@ -3,14 +3,13 @@ package no.uio.tools.testdoc.util;
 import java.util.Comparator;
 import java.util.Map;
 
-
 public class MethodOrderComparator<T extends MethodWrapper> implements Comparator<T> {
 
     private Map<String, Integer> methodOrders;
 
 
     public MethodOrderComparator(final Class<?> clazz) {
-        methodOrders = MethodIndexer.getMethodOrders(clazz);
+        methodOrders = MethodIndexer.getMethodOrders(clazz, JavapMethodLister.getInstance());
     }
 
 
