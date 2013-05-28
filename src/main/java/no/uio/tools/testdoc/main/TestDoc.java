@@ -13,7 +13,7 @@ public class TestDoc {
         log.info("   | |  | (           ) |  | |  | |   ) | |   | | |        ");
         log.info("   | |  | (____/Y\\____) |  | |  | (__/  ) (___) | (____/\\  ");
         log.info("   )_(  (_______|_______)  )_(  (______/(_______)_______/  ");
-        log.info("  TestDoc - Show the world what your tests do. Version 0.2.7 (" + name + ")");
+        log.info("  TestDoc - Show the world what your tests do. Version 1.1 (" + name + ")");
     }
 
 }

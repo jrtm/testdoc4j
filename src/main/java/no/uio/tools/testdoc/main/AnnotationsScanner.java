@@ -101,6 +101,7 @@ public class AnnotationsScanner {
             if (testdocPlan.title() != null) {
                 testDocPlanData.setTitle(testdocPlan.title());
             }
+            testDocPlanData.setDescription(testdocPlan.description());
             testDocPlanData.setSortOrder(testdocPlan.sortOrder());
             testDocPlanData.setClazz(clazz);
         } else {

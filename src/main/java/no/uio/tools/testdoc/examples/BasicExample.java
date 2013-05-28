@@ -6,11 +6,11 @@ import no.uio.tools.testdoc.annotations.TestDocTest;
 
 import org.junit.Test;
 
-@TestDocPlan(title = "Basic TestDoc example with this title")
+@TestDocPlan(title = "Basic TestDoc example with this title", description = "Description detailing setup conditions for the tests")
 public class BasicExample {
 
     @Test
-    @TestDocTest("Test description")
+    @TestDocTest(value = "Test description")
     @TestDocTask(task = "Task description", checks = "Desired behaviour description")
     public void testUserLogin() {
         // Testcode goes here

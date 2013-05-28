@@ -24,6 +24,12 @@
     <#if testplan.clazz??>
       <p><em>Class: ${testplan.clazz.getName()}</em></p>
     </#if>
+    
+    <p class="test-description">
+        <#if testplan.description?exists>
+        ${testplan.description}
+        </#if>
+    </p>
 
     <#assign box_id=1>
     
@@ -49,7 +55,7 @@
         </#if>
         
         
-        <tr valign="top" <#if (test.isImplemented() == false)> style="color:grey;" </#if> class="${row_class}" id="doc-${testplan.sortOrder}-${test.number}">
+        <tr valign="top" <#if (test.isImplemented())> style="color:grey;" </#if> class="${row_class}" id="doc-${testplan.sortOrder}-${test.number}">
            <td<#if (test.getTasks()?exists)><#if (test.getTasks()?size > 1)> rowspan="${test.checksCount}"</#if></#if> >
              ${test.number}
            </td>

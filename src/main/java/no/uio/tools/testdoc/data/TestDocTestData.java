@@ -8,6 +8,7 @@ import no.uio.tools.testdoc.util.MethodWrapper;
 public class TestDocTestData implements MethodWrapper {
 
     private String title;
+
     private int number;
     private boolean implemented;
 

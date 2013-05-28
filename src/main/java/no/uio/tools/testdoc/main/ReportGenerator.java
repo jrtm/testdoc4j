@@ -31,8 +31,8 @@ public class ReportGenerator {
 
 
     public static String generateTestDocForClasses(final List<Class<?>> classes,
-            final boolean failIfMissingTestPlanTitle)
-            throws ClassNotFoundException, IOException, TemplateException, MavenReportException {
+            final boolean failIfMissingTestPlanTitle) throws ClassNotFoundException, IOException, TemplateException,
+            MavenReportException {
         HashMap<String, List<TestDocPlanData>> datamodel = scanClasses(classes, failIfMissingTestPlanTitle);
         String output = processFreemarkerTemplate(datamodel, "testdoc.ftl");
         return output;

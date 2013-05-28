@@ -5,6 +5,8 @@ import java.util.LinkedList;
 public class TestDocPlanData implements Comparable<TestDocPlanData> {
 
     private String title;
+    private String description;
+
     private int sortOrder;
     private Class<?> clazz;
     private LinkedList<TestDocTestData> tests;
@@ -17,6 +19,16 @@ public class TestDocPlanData implements Comparable<TestDocPlanData> {
 
     public String getTitle() {
         return title;
+    }
+
+
+    public void setDescription(final String description) {
+        this.description = description;
+    }
+
+
+    public String getDescription() {
+        return description;
     }
 
 
