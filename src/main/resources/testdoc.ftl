@@ -55,15 +55,15 @@
         </#if>
         
         
-        <tr valign="top" <#if (test.isImplemented())> style="color:grey;" </#if> class="${row_class}" id="doc-${testplan.sortOrder}-${test.number}">
+        <tr valign="top"  class="${row_class}" <#if test.isImplemented()>style="color:grey"</#if> id="doc-${testplan.sortOrder}-${test.number}">
            <td<#if (test.getTasks()?exists)><#if (test.getTasks()?size > 1)> rowspan="${test.checksCount}"</#if></#if> >
              ${test.number}
            </td>
            <td<#if (test.getTasks()?exists)><#if (test.getTasks()?size > 1)> rowspan="${test.checksCount}"</#if></#if> > 
              <#if test.title?exists>
-               ${test.title}
-               <#if (test.isImplemented() == false)>
-                 (Not implemented)
+               <span class="test-title">${test.title}</span>
+               <#if !test.isImplemented()>
+                 <span class="not-implemented-label">(Not implemented)</span>
                </#if>
              <#else>
                &nbsp;
@@ -74,19 +74,19 @@
            <#if test.getTasks()?exists> 
              <#list test.getTasks() as task>
              <#if (test.getTasks()?size > 1 && !(test.getTasks()?first == task) )>
-        <tr class="${row_class}" <#if (test.isImplemented() == false)> style="color:grey;" </#if>> 
+        <tr class="${row_class}" <#if test.isImplemented()>style="color:grey"</#if> > 
              </#if>     
              <td<#if (task.checks?size > 1)> rowspan="${task.checks?size}"</#if> >  
-               ${task.title}
+               <span class="task-title">${task.title}</span>
              </td>  
                  <#if task.getChecks()?exists>
                    <#list task.getChecks() as check>
                    <#if (task.checks?size > 1 && !(task.getChecks()?first == check))>
-        <tr class="${row_class}" <#if (test.isImplemented() == false)> style="color:grey;" </#if>>       
+        <tr class="${row_class}" <#if test.isImplemented()>style="color:grey"</#if> >       
                    </#if>
                                   
              <td valign="top">
-                ${check}
+                <span class="task-check">${check}</span>
              </td>
         </tr>              
         

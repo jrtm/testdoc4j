@@ -55,9 +55,7 @@ public abstract class JavapMethodLister implements MethodLister {
             String className = clazz.getSimpleName();
             String classPath = classFile.getParent();
 
-            return new String[] {
-                    DECOMPILER, className, "-classpath", classPath
-            };
+            return new String[] { DECOMPILER, className, "-classpath", classPath };
         }
 
 
@@ -80,9 +78,7 @@ public abstract class JavapMethodLister implements MethodLister {
             URL url = getClassResource(clazz);
             String pathToClassFile = url.toExternalForm();
 
-            return new String[] {
-                    DECOMPILER, pathToClassFile
-            };
+            return new String[] { DECOMPILER, pathToClassFile };
         }
 
     }
@@ -97,7 +93,7 @@ public abstract class JavapMethodLister implements MethodLister {
             javap.destroy();
 
             // "javap -version" only exists for OpenJDK, so we can use this to check for OracleJDK
-            return version.contains("Usage:");
+            return version != null && version.contains("Usage:");
 
         } catch (Exception e) {
             return false;
