@@ -1,5 +1,11 @@
 <#-- include "/header.ftl" -->
 
+<style type="text/css">
+.implemented {
+    color: grey !important;
+}
+</style>
+
 <#if testplans?exists>
 
 <ol>
@@ -26,9 +32,7 @@
     </#if>
     
     <p class="test-description">
-        <#if testplan.description?exists>
-        ${testplan.description}
-        </#if>
+        ${testplan.description!}
     </p>
 
     <#assign box_id=1>
@@ -55,7 +59,7 @@
         </#if>
         
         
-        <tr valign="top"  class="${row_class}" <#if test.isImplemented()>style="color:grey"</#if> id="doc-${testplan.sortOrder}-${test.number}">
+        <tr valign="top"  class="${row_class} <#if test.isImplemented()>implemented</#if>" id="doc-${testplan.sortOrder}-${test.number}">
            <td<#if (test.getTasks()?exists)><#if (test.getTasks()?size > 1)> rowspan="${test.checksCount}"</#if></#if> >
              ${test.number}
            </td>
@@ -74,7 +78,7 @@
            <#if test.getTasks()?exists> 
              <#list test.getTasks() as task>
              <#if (test.getTasks()?size > 1 && !(test.getTasks()?first == task) )>
-        <tr class="${row_class}" <#if test.isImplemented()>style="color:grey"</#if> > 
+        <tr class="${row_class} <#if test.isImplemented()>implemented</#if>" > 
              </#if>     
              <td<#if (task.checks?size > 1)> rowspan="${task.checks?size}"</#if> >  
                <span class="task-title">${task.title}</span>
@@ -82,7 +86,7 @@
                  <#if task.getChecks()?exists>
                    <#list task.getChecks() as check>
                    <#if (task.checks?size > 1 && !(task.getChecks()?first == check))>
-        <tr class="${row_class}" <#if test.isImplemented()>style="color:grey"</#if> >       
+        <tr class="${row_class} <#if test.isImplemented()>implemented</#if>">       
                    </#if>
                                   
              <td valign="top">
