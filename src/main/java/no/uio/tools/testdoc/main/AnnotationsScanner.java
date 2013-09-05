@@ -17,6 +17,8 @@ import no.uio.tools.testdoc.data.TestDocTestData;
 import no.uio.tools.testdoc.util.MethodOrderComparator;
 
 import org.apache.maven.reporting.MavenReportException;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.scanners.ResourcesScanner;
@@ -71,18 +73,6 @@ public class AnnotationsScanner {
         TestDocTasks testDocTasks = method.getAnnotation(TestDocTasks.class);
         TestDocTask testDocTask = method.getAnnotation(TestDocTask.class);
 
-        // System.out.println("Method: " + method.getName());
-        // if (testDocTest != null && testDocTest.value() != null) {
-        // System.out.println("  Test : " + testDocTest.value());
-        // }
-        //
-        // if (testDocTasks != null && testDocTasks.value() != null) {
-        // System.out.println("  Tasks: " + testDocTasks.value().length);
-        // }
-        // if (testDocTask != null && testDocTask.task() != null) {
-        // System.out.println("  Task : " + testDocTask.task());
-        // }
-
         return (testDocTest != null && testDocTest.value() != null)
                 || (testDocTasks != null && testDocTasks.value() != null)
                 || (testDocTask != null && testDocTask.task() != null);
@@ -128,11 +118,9 @@ public class AnnotationsScanner {
                 TestDocTest testDocTestAnnotations = m.getAnnotation(TestDocTest.class);
                 TestDocTasks testDocTasksAnnotations = m.getAnnotation(TestDocTasks.class);
                 TestDocTask testDocTaskAnnotations = m.getAnnotation(TestDocTask.class);
-                org.junit.Test testAnnotation = m.getAnnotation(org.junit.Test.class);
 
                 TestDocTestData testDocTestData = new TestDocTestData();
-                /* Set the implemented flag to false if method has noe @Test annotation. */
-                testDocTestData.setImplemented((testAnnotation != null));
+                testDocTestData.setImplemented(isImplemented(m));
 
                 testDocTestData.setMethodName(m.getName());
 
@@ -206,6 +194,14 @@ public class AnnotationsScanner {
             return null;
         }
         return testDocPlanData;
+    }
+
+
+    private static boolean isImplemented(final Method m) {
+        boolean hasTestAnnotation = m.getAnnotation(Test.class) != null;
+        boolean hasIgnoreAnnotation = m.getAnnotation(Ignore.class) != null;
+
+        return hasTestAnnotation && !hasIgnoreAnnotation;
     }
 
 
