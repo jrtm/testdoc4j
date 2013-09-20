@@ -34,7 +34,10 @@ public class TestAnnotionsScanner {
         assertEquals("Test with many tasks & checks", tests.get(1).getTitle());
         assertTrue(tests.get(1).isImplemented());
 
-        assertEquals("Unimplemented test", tests.get(2).getTitle());
+        assertEquals("Ignored test", tests.get(2).getTitle());
         assertFalse(tests.get(2).isImplemented());
+
+        assertEquals("Unimplemented test", tests.get(3).getTitle());
+        assertFalse(tests.get(3).isImplemented());
     }
 }

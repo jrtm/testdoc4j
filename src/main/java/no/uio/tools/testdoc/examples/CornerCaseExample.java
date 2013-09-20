@@ -4,6 +4,7 @@ import no.uio.tools.testdoc.annotations.TestDocTask;
 import no.uio.tools.testdoc.annotations.TestDocTasks;
 import no.uio.tools.testdoc.annotations.TestDocTest;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class CornerCaseExample {
@@ -12,7 +13,6 @@ public class CornerCaseExample {
     @TestDocTest("Test with single task & check")
     @TestDocTask(task = "Go to login page", checks = "Check 1")
     public void testWithOneTask() {
-        assert (true);
     }
 
 
@@ -22,14 +22,28 @@ public class CornerCaseExample {
     @TestDocTasks({ @TestDocTask(task = "First task", checks = "Single check"),
             @TestDocTask(task = "Second task", checks = { "First check", "Second check" }) })
     public void testWithManyTasks() {
-        assert (true);
+    }
+
+
+    @Test
+    @Ignore
+    @TestDocTest("Ignored test")
+    @TestDocTask(task = "Ignore this!", checks = "Make sure the task is ignored")
+    public void ignoredTest() {
+
     }
 
 
     @TestDocTest("Unimplemented test")
     @TestDocTask(task = "Single task", checks = "Single check")
     public void unimplementedTest() {
-        assert (true);
+    }
+
+
+    @TestDocTest("Test with no checks")
+    @TestDocTask(task = "Nothing")
+    public void testWithoutChecks() {
+
     }
 
 }
