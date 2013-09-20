@@ -1,16 +1,17 @@
 package no.uio.tools.testdoc.data;
 
-import java.util.LinkedList;
+import java.util.List;
 
 public class TestDocTaskData {
 
-    private String title;
+    private final String title;
 
-    private LinkedList<String> checks;
+    private final List<String> checks;
 
 
-    public void setTitle(String title) {
+    public TestDocTaskData(final String title, final List<String> checks) {
         this.title = title;
+        this.checks = checks;
     }
 
 
@@ -19,13 +20,13 @@ public class TestDocTaskData {
     }
 
 
-    public void setChecks(LinkedList<String> checks) {
-        this.checks = checks;
+    public List<String> getChecks() {
+        return checks;
     }
 
 
-    public LinkedList<String> getChecks() {
-        return checks;
+    public int getChecksCount() {
+        return checks.size();
     }
 
 }

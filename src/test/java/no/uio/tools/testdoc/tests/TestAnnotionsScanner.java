@@ -4,10 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.util.LinkedList;
 import java.util.List;
 
-import junit.framework.Assert;
 import no.uio.tools.testdoc.data.TestDocPlanData;
 import no.uio.tools.testdoc.data.TestDocTestData;
 import no.uio.tools.testdoc.examples.CornerCaseExample;
@@ -21,7 +19,7 @@ public class TestAnnotionsScanner {
     // @Test
     public void findAnnotatedClasses() {
         List<Class<?>> annotatedClasses = AnnotationsScanner.findAllAnnotatedClasses();
-        Assert.assertEquals("Should find all annotated classes", 4, annotatedClasses.size());
+        assertEquals("Should find all annotated classes", 4, annotatedClasses.size());
     }
 
 
@@ -29,7 +27,7 @@ public class TestAnnotionsScanner {
     public void findTestDocTask() throws ClassNotFoundException, MavenReportException {
         Class<?> clazz = CornerCaseExample.class;
         TestDocPlanData data = AnnotationsScanner.getAnnotationsFromClass(clazz, false);
-        LinkedList<TestDocTestData> tests = data.getTests();
+        List<TestDocTestData> tests = data.getTests();
         assertEquals("Test with single task & check", tests.get(0).getTitle());
         assertTrue(tests.get(0).isImplemented());
 

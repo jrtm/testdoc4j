@@ -1,6 +1,5 @@
 package no.uio.tools.testdoc.examples;
 
-import static junit.framework.Assert.assertTrue;
 import no.uio.tools.testdoc.annotations.TestDocPlan;
 import no.uio.tools.testdoc.annotations.TestDocTask;
 import no.uio.tools.testdoc.annotations.TestDocTasks;
@@ -17,7 +16,6 @@ public class ITFrontPageTest {
     @TestDocTest("Test at vi er kommet til riktig side")
     @TestDocTasks(@TestDocTask(task = "Gå til førstesiden", checks = "Sjekk at tittelen er riktig?"))
     public void testTitle() {
-        assertTrue(true);
     }
 
 

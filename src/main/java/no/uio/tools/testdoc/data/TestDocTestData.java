@@ -1,7 +1,6 @@
 package no.uio.tools.testdoc.data;
 
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.List;
 
 import no.uio.tools.testdoc.util.MethodWrapper;
 
@@ -14,6 +13,8 @@ public class TestDocTestData implements MethodWrapper {
 
     private String methodName;
 
+    private List<TestDocTaskData> tasks;
+
 
     public boolean isImplemented() {
         return implemented;
@@ -23,8 +24,6 @@ public class TestDocTestData implements MethodWrapper {
     public void setImplemented(final boolean implemented) {
         this.implemented = implemented;
     }
-
-    private LinkedList<TestDocTaskData> tasks;
 
 
     public void setTitle(final String title) {
@@ -37,12 +36,12 @@ public class TestDocTestData implements MethodWrapper {
     }
 
 
-    public void setTasks(final LinkedList<TestDocTaskData> tasks) {
+    public void setTasks(final List<TestDocTaskData> tasks) {
         this.tasks = tasks;
     }
 
 
-    public LinkedList<TestDocTaskData> getTasks() {
+    public List<TestDocTaskData> getTasks() {
         return tasks;
     }
 
@@ -57,6 +56,7 @@ public class TestDocTestData implements MethodWrapper {
     }
 
 
+    @Override
     public String getMethodName() {
         return methodName;
     }
@@ -74,10 +74,8 @@ public class TestDocTestData implements MethodWrapper {
      */
     public int getChecksCount() {
         int count = 0;
-        LinkedList<TestDocTaskData> tasks = getTasks();
-        for (Iterator<TestDocTaskData> iterator = tasks.iterator(); iterator.hasNext();) {
-            TestDocTaskData task = iterator.next();
-            count = count + task.getChecks().size();
+        for (TestDocTaskData task : getTasks()) {
+            count += task.getChecksCount();
         }
         return count;
     }

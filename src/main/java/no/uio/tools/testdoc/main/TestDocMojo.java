@@ -56,16 +56,19 @@ public class TestDocMojo extends AbstractMavenReport {
     private File outputDirectory;
 
 
+    @Override
     public String getName(final Locale locale) {
         return "TestDoc";
     }
 
 
+    @Override
     public String getDescription(final Locale locale) {
         return "Test plans for human testers.";
     }
 
 
+    @Override
     public String getOutputName() {
         return "testdoc";
     }

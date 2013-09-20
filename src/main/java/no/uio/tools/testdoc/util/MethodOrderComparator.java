@@ -18,6 +18,7 @@ public class MethodOrderComparator<T extends MethodWrapper> implements Comparato
     }
 
 
+    @Override
     public int compare(final T a, final T b) {
         Integer orderA = methodOrders.get(a.getMethodName());
         Integer orderB = methodOrders.get(b.getMethodName());

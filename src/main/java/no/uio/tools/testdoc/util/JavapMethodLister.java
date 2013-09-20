@@ -16,6 +16,7 @@ public abstract class JavapMethodLister implements MethodLister {
     private static JavapMethodLister instance;
 
 
+    @Override
     public List<String> getMethodsForClass(final Class<?> clazz) {
         try {
             String[] javapArgs = getJavapProcessParametersForClass(clazz);

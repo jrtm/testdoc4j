@@ -2,6 +2,7 @@ package no.uio.tools.testdoc.main;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -84,7 +85,7 @@ public class AnnotationsScanner {
             throws ClassNotFoundException, MavenReportException {
 
         TestDocPlanData testDocPlanData = new TestDocPlanData();
-        LinkedList<TestDocTestData> testsList = new LinkedList<TestDocTestData>();
+        List<TestDocTestData> testsList = new LinkedList<TestDocTestData>();
         TestDocPlan testdocPlan = clazz.getAnnotation(TestDocPlan.class);
 
         if (testdocPlan != null) {
@@ -132,44 +133,19 @@ public class AnnotationsScanner {
                 }
 
                 /* @TestDocTasks(@TestDocTask(task = "Go to login page",check="Is there a login form?") */
-                LinkedList<TestDocTaskData> tasksLists = new LinkedList<TestDocTaskData>();
+                List<TestDocTaskData> tasksLists = new LinkedList<TestDocTaskData>();
                 if (testDocTasksAnnotations != null) {
-
-                    TestDocTask[] tasks = testDocTasksAnnotations.value();
-
-                    for (int i = 0; i < tasks.length; i++) {
-                        TestDocTaskData taskData = new TestDocTaskData();
-                        taskData.setTitle(tasks[i].task());
-                        String[] checks = tasks[i].checks();
-                        LinkedList<String> checksData = new LinkedList<String>();
-                        for (int j = 0; j < checks.length; j++) {
-                            checksData.add(checks[j]);
-                        }
-                        if (checks.length > 0) {
-                            taskData.setChecks(checksData);
-                        }
+                    for (TestDocTask task : testDocTasksAnnotations.value()) {
+                        TestDocTaskData taskData = getTaskData(task);
                         tasksLists.add(taskData);
-
                     }
-
                 }
 
                 /* If unit test has a single TestDocTask annoation, then add it to the list. */
                 // testDocTask = (TestDocTask) m.getAnnotation(TestDocTask.class);
                 if (testDocTaskAnnotations != null) {
-                    TestDocTaskData taskData = new TestDocTaskData();
-                    taskData.setTitle(testDocTaskAnnotations.task());
-
-                    String[] checks = testDocTaskAnnotations.checks();
-                    LinkedList<String> checksData = new LinkedList<String>();
-                    for (int j = 0; j < checks.length; j++) {
-                        checksData.add(checks[j]);
-                    }
-                    if (checks.length > 0) {
-                        taskData.setChecks(checksData);
-                    }
+                    TestDocTaskData taskData = getTaskData(testDocTaskAnnotations);
                     tasksLists.add(taskData);
-
                 }
 
                 if (tasksLists.size() > 0) {
@@ -194,6 +170,15 @@ public class AnnotationsScanner {
             return null;
         }
         return testDocPlanData;
+    }
+
+
+    private static TestDocTaskData getTaskData(final TestDocTask task) {
+        String title = task.task();
+        List<String> checks = Arrays.asList(task.checks());
+
+        TestDocTaskData taskData = new TestDocTaskData(title, checks);
+        return taskData;
     }
 
 
