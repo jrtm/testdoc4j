@@ -81,7 +81,7 @@
         <tr class="${row_class} <#if test.isImplemented()>implemented</#if>" > 
              </#if>     
              <td<#if (task.checks?size > 1)> rowspan="${task.checks?size}"</#if> >  
-               <span class="task-title">${task.title}</span>
+               <span class="task-title">${task.steps[0]}</span>
              </td>  
                  <#if task.getChecks()?exists>
                    <#list task.getChecks() as check>

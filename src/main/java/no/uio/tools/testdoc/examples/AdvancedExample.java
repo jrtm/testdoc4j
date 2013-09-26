@@ -17,8 +17,8 @@ public class AdvancedExample {
     @Test
     @TestDocTest("Test av innloggingsside")
     @TestDocTasks({
-            @TestDocTask(task = "Gå til innloggingsside", checks = "Siden ser bra ut"),
-            @TestDocTask(task = "Fyll ut brukernavn og passord", checks = { "Det er ikke autocomplete",
+            @TestDocTask(value = "Gå til innloggingsside", checks = "Siden ser bra ut"),
+            @TestDocTask(value = "Fyll ut brukernavn og passord", checks = { "Det er ikke autocomplete",
                     "Login knapp virker" }) })
     public void userLogin() {
     }
@@ -26,17 +26,17 @@ public class AdvancedExample {
 
     @Test
     @TestDocTest("First test description")
-    @TestDocTask(task = "Single task description", checks = "Desired behaviour")
+    @TestDocTask(value = "Single task description", checks = "Desired behaviour")
     public void userLogout() {
     }
 
 
     @TestDocTest("Test search- and detailspage")
     @TestDocTasks({
-            @TestDocTask(task = "Go to search page", checks = "Searchform is present"),
-            @TestDocTask(task = "Search for 'uio'", checks = { "See that you get 4 searchresults",
+            @TestDocTask(value = "Go to search page", checks = "Searchform is present"),
+            @TestDocTask(value = "Search for 'uio'", checks = { "See that you get 4 searchresults",
                     "See that 'usit' is one of the searchresults" }) })
-    @TestDocTask(task = "Single task description", checks = "Desired behaviour")
+    @TestDocTask(value = "Single task description", checks = "Desired behaviour")
     public void search() {
     }
 
@@ -47,7 +47,7 @@ public class AdvancedExample {
 
 
     @Test
-    @TestDocTask(task = "Tasks with no description", checks = "Desired behaviour")
+    @TestDocTask(value = "Tasks with no description", checks = "Desired behaviour")
     public void loremIpsumTest() {
     }
 

@@ -11,7 +11,7 @@ public class BasicExample {
 
     @Test
     @TestDocTest(value = "Test description")
-    @TestDocTask(task = "Task description", checks = "Desired behaviour description")
+    @TestDocTask(value = "Task description", checks = "Desired behaviour description")
     public void testUserLogin() {
         // Testcode goes here
     }

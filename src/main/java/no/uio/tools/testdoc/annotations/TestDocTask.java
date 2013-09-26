@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 @Target({ ElementType.METHOD })
 public @interface TestDocTask {
 
-    String task();
+    String[] value();
 
 
     String[] checks() default {};

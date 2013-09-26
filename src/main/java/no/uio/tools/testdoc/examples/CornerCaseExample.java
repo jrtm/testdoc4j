@@ -11,16 +11,16 @@ public class CornerCaseExample {
 
     @Test
     @TestDocTest("Test with single task & check")
-    @TestDocTask(task = "Go to login page", checks = "Check 1")
+    @TestDocTask(value = "Go to login page", checks = "Check 1")
     public void testWithOneTask() {
     }
 
 
     @Test
     @TestDocTest("Test with many tasks & checks")
-    @TestDocTask(task = "Single task", checks = "Single check")
-    @TestDocTasks({ @TestDocTask(task = "First task", checks = "Single check"),
-            @TestDocTask(task = "Second task", checks = { "First check", "Second check" }) })
+    @TestDocTask(value = "Single task", checks = "Single check")
+    @TestDocTasks({ @TestDocTask(value = "First task", checks = "Single check"),
+            @TestDocTask(value = "Second task", checks = { "First check", "Second check" }) })
     public void testWithManyTasks() {
     }
 
@@ -28,20 +28,20 @@ public class CornerCaseExample {
     @Test
     @Ignore
     @TestDocTest("Ignored test")
-    @TestDocTask(task = "Ignore this!", checks = "Make sure the task is ignored")
+    @TestDocTask(value = "Ignore this!", checks = "Make sure the task is ignored")
     public void ignoredTest() {
 
     }
 
 
     @TestDocTest("Unimplemented test")
-    @TestDocTask(task = "Single task", checks = "Single check")
+    @TestDocTask(value = "Single task", checks = "Single check")
     public void unimplementedTest() {
     }
 
 
     @TestDocTest("Test with no checks")
-    @TestDocTask(task = "Nothing")
+    @TestDocTask(value = "Nothing")
     public void testWithoutChecks() {
 
     }
