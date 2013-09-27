@@ -1,5 +1,6 @@
 package no.uio.tools.testdoc.data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TestDocPlanData implements Comparable<TestDocPlanData> {
@@ -9,7 +10,7 @@ public class TestDocPlanData implements Comparable<TestDocPlanData> {
 
     private int sortOrder;
     private Class<?> clazz;
-    private List<TestDocTestData> tests;
+    private List<TestDocTestData> tests = new ArrayList<TestDocTestData>();
 
 
     public void setTitle(final String title) {
@@ -65,6 +66,11 @@ public class TestDocPlanData implements Comparable<TestDocPlanData> {
     @Override
     public int compareTo(final TestDocPlanData other) {
         return this.sortOrder - other.getSortOrder();
+    }
+
+
+    public boolean isEmpty() {
+        return (tests == null || tests.isEmpty()) && (title == null || title.isEmpty());
     }
 
 }

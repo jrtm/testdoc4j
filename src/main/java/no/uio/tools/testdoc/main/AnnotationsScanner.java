@@ -128,7 +128,7 @@ public class AnnotationsScanner {
                 if (testDocTestAnnotations != null) {
                     testDocTestData.setTitle(testDocTestAnnotations.value());
                 } else {
-                    testDocTestData.setTitle("(no title!!!)"); // TODO Remove
+                    testDocTestData.setTitle(m.getName());
                 }
 
                 /* @TestDocTasks(@TestDocTask(task = "Go to login page",check="Is there a login form?") */

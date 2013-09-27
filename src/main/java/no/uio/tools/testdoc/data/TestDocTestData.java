@@ -1,5 +1,6 @@
 package no.uio.tools.testdoc.data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import no.uio.tools.testdoc.util.MethodWrapper;
@@ -13,7 +14,7 @@ public class TestDocTestData implements MethodWrapper {
 
     private String methodName;
 
-    private List<TestDocTaskData> tasks;
+    private List<TestDocTaskData> tasks = new ArrayList<TestDocTaskData>();
 
 
     public boolean isImplemented() {
