@@ -4,119 +4,114 @@
 .implemented {
     color: grey !important;
 }
+
+.test-class {
+    font-style: italic;
+}
+.test-name {
+    font-weight: bold;
+}
+
+.bodyTable .test-header td {
+    padding: 5px;
+}
+.task {
+    font-family: Verdana, Helvetica, Arial, sans-serif;
+    font-size: 13px;
+}
+.task ul{
+    padding-left: 20px;
+}
+.task-num {
+    font-size: 80%;
+}
+.bodyTable .task ul, .bodyTable .task td {
+    margin: 1px;
+}
+.task .single-element {
+    padding-left: 5px;
+}
+.no-tasks {
+    font-style: italic;
+}
 </style>
 
-<#if testplans?exists>
+<#macro optionalList elements>
+    <#if elements?size gt 1>
+        <ul>
+        <#list elements as element>
+            <li>${element!}</li>
+        </#list>
+        </ul>
+    <#elseif elements?size == 1>
+        <span class="single-element">${elements[0]!}</span>
+    </#if>
+</#macro>
 
+<#if !testplans?exists || testplans?size == 0>
+    <p class="no tasks">No tests found</p>
+<#else>
+
+<#-- Table of Contents -->
 <ol>
 <#list testplans as testplan>
-    <#if testplan.title?? && testplan.getTests()?? && (testplan.getTests()?size >0) >
-        <li>
-            <a href="#doc-${testplan.sortOrder}"><b>${testplan.title}</b></a>
-            <#if testplan.clazz??> <em>(${testplan.clazz.getSimpleName()})</em></#if>
-        </li>
-    </#if>
+    <li>
+        <a href="#doc-${testplan.sortOrder}"><span class="test-name">${testplan.title!'(No title)'}</span></a>
+        <span class="test-class">(${(testplan.clazz!).simpleName!'no class'})</span>
+    </li>
 </#list>
 </ol>
 
-
 <#list testplans as testplan>
-<div id="doc-${testplan.sortOrder}">
-    <#if testplan.title?exists>
-      <h2>${testplan.title}</h2>
-    <#else>
-      <h2>(No title)</h2>
-    </#if>
-    <#if testplan.clazz??>
-      <p><em>Class: ${testplan.clazz.getName()}</em></p>
-    </#if>
-    
-    <p class="test-description">
-        ${testplan.description!}
-    </p>
-
-    <#assign box_id=1>
-    
-    <#assign row_class="a">
+    <div id="doc-${testplan.sortOrder}">
+        <div class="test-plan-header">
+            <h2>${testplan.title!'(No title)'}</h2>
+            
+            <p class="test-class">Class: ${(testplan.clazz!).name!'N/A'}</p>
+            <p class="test-description">${testplan.description!}</p>
+        </div>
         
-    <table cellpadding="3" border="0" class="bodyTable">
-    <tbody>
-    <tr align="left" class="a">
-       <th>No.</th>
-       <th>Test</th>
-       <th>Action</th>
-       <th>Desired result</th>
-    </tr>
-
-    <#if testplan.getTests()?exists>
-        <#list testplan.getTests() as test>
-        
-        
-        <#if row_class =="a">
-          <#assign row_class="b">
-        <#else>
-          <#assign row_class="a">
-        </#if>
-        
-        
-        <tr valign="top"  class="${row_class} <#if test.isImplemented()>implemented</#if>" id="doc-${testplan.sortOrder}-${test.number}">
-           <td<#if (test.getTasks()?exists)><#if (test.getTasks()?size > 1)> rowspan="${test.checksCount}"</#if></#if> >
-             ${test.number}
-           </td>
-           <td<#if (test.getTasks()?exists)><#if (test.getTasks()?size > 1)> rowspan="${test.checksCount}"</#if></#if> > 
-             <#if test.title?exists>
-               <span class="test-title">${test.title}</span>
-               <#if !test.isImplemented()>
-                 <span class="not-implemented-label">(Not implemented)</span>
-               </#if>
-             <#else>
-               &nbsp;
-             </#if>
-           </td>
-           
-           
-           <#if test.getTasks()?exists> 
-             <#list test.getTasks() as task>
-             <#if (test.getTasks()?size > 1 && !(test.getTasks()?first == task) )>
-        <tr class="${row_class} <#if test.isImplemented()>implemented</#if>" > 
-             </#if>     
-             <td<#if (task.checks?size > 1)> rowspan="${task.checks?size}"</#if> >  
-               <span class="task-title">${task.title}</span>
-             </td>  
-                 <#if task.getChecks()?exists>
-                   <#list task.getChecks() as check>
-                   <#if (task.checks?size > 1 && !(task.getChecks()?first == check))>
-        <tr class="${row_class} <#if test.isImplemented()>implemented</#if>">       
-                   </#if>
-                                  
-             <td valign="top">
-                <span class="task-check">${check}</span>
-             </td>
-        </tr>              
-        
-                   </#list>
-                 <#else>
-                   <td>&nbsp;</td>
-        </tr>
-                 </#if>
-               
-             </#list>
-           <#else>
-             <td>&nbsp;</td>
-             <td>&nbsp;</td>
-        </tr>     
-           </#if>
-           
-        
-        </#list>
-    <#else>
-      <tr><td colspan="4" style="color:red">(No tests)</td></tr>
-        
-        
-    </#if>
-    </tbody>
-    </table>
-</div>
+        <table cellpadding="3" border="0" class="bodyTable">
+            <thead>
+                <tr align="left" class="a">
+                    <th>No.</th>
+                    <th>Action</th>
+                    <th>Desired result</th>
+                </tr>
+            </thead>
+            <tbody>
+                <#list testplan.tests as test>
+                    <#assign row_class = (test_index % 2 == 0)?string('a', 'b')>
+                    <#assign test_link = "doc-${testplan.sortOrder}-${test_index + 1}">
+                    
+                    <tr id="${test_link}" class="a test-header <#if test.implemented>implemented</#if>">
+                        <td><a href="#${test_link}">${test_index + 1}</a></td>
+                        <td colspan="2">
+                            ${test.title!}
+                            <#if test.implemented>
+                                <i>(Automated)</i>
+                            </#if>
+                        </td>
+                    </tr>
+                    
+                    <#if test.tasks?? && test.tasks?size gt 0>
+                        <#list test.tasks as task>
+                            <tr class="b task <#if test.implemented>implemented</#if>" id="${test_link}-${task_index + 1}">
+                                <td class="task-num"><a href="#${test_link}-${task_index + 1}">${test_index + 1}.${task_index + 1}</a></td>
+                                <td class="task-steps"><@optionalList task.steps /></td>
+                                <td class="task-checks"><@optionalList task.checks /></td>
+                            </tr>
+                        </#list>
+                    <#else>
+                        <tr class="b task">
+                            <td class="task-num">&nbsp;</td>
+                            <td class="no-tasks" colspan="2">No tasks</td>
+                        </tr>
+                    </#if>
+                </#list>
+            </tbody>
+        </table>
+    </div>
 </#list>
 </#if>
 

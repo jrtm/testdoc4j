@@ -2,7 +2,6 @@ package no.uio.tools.testdoc.main;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -76,7 +75,7 @@ public class AnnotationsScanner {
 
         return (testDocTest != null && testDocTest.value() != null)
                 || (testDocTasks != null && testDocTasks.value() != null)
-                || (testDocTask != null && testDocTask.task() != null);
+                || (testDocTask != null && testDocTask.value() != null);
     }
 
 
@@ -129,7 +128,7 @@ public class AnnotationsScanner {
                 if (testDocTestAnnotations != null) {
                     testDocTestData.setTitle(testDocTestAnnotations.value());
                 } else {
-                    testDocTestData.setTitle("(no title!!!)"); // TODO Remove
+                    testDocTestData.setTitle(m.getName());
                 }
 
                 /* @TestDocTasks(@TestDocTask(task = "Go to login page",check="Is there a login form?") */
@@ -174,10 +173,10 @@ public class AnnotationsScanner {
 
 
     private static TestDocTaskData getTaskData(final TestDocTask task) {
-        String title = task.task();
-        List<String> checks = Arrays.asList(task.checks());
+        String[] steps = task.value();
+        String[] checks = task.checks();
 
-        TestDocTaskData taskData = new TestDocTaskData(title, checks);
+        TestDocTaskData taskData = new TestDocTaskData(steps, checks);
         return taskData;
     }
 

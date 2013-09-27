@@ -1,32 +1,30 @@
 package no.uio.tools.testdoc.data;
 
-import java.util.List;
-
 public class TestDocTaskData {
 
-    private final String title;
+    private final String[] steps;
 
-    private final List<String> checks;
+    private final String[] checks;
 
 
-    public TestDocTaskData(final String title, final List<String> checks) {
-        this.title = title;
+    public TestDocTaskData(final String[] steps, final String[] checks) {
+        this.steps = steps;
         this.checks = checks;
     }
 
 
-    public String getTitle() {
-        return title;
+    public String[] getSteps() {
+        return steps;
     }
 
 
-    public List<String> getChecks() {
+    public String[] getChecks() {
         return checks;
     }
 
 
     public int getChecksCount() {
-        return checks.size();
+        return checks.length;
     }
 
 }

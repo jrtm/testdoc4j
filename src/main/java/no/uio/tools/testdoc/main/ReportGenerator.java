@@ -71,8 +71,15 @@ public class ReportGenerator {
     private static void sortAndNormalizeTestPlans(final List<TestDocPlanData> testplans) {
         Collections.sort(testplans);
         int num = 0;
-        for (TestDocPlanData plan : testplans) {
-            plan.setSortOrder(++num);
+
+        Iterator<TestDocPlanData> it = testplans.iterator();
+        while (it.hasNext()) {
+            TestDocPlanData plan = it.next();
+            if (plan.isEmpty()) {
+                it.remove();
+            } else {
+                plan.setSortOrder(++num);
+            }
         }
     }
 
@@ -135,10 +142,12 @@ public class ReportGenerator {
             e.printStackTrace();
         } finally {
             try {
-                if (br != null)
+                if (br != null) {
                     br.close();
-                if (is != null)
+                }
+                if (is != null) {
                     is.close();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

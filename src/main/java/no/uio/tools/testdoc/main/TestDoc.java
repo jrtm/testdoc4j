@@ -5,6 +5,10 @@ import org.apache.maven.plugin.logging.Log;
 public class TestDoc {
 
     public static void outputBanner(final Log log, final String name) {
+        if (log == null) {
+            return;
+        }
+
         log.info("________________ ______________________  _______ _______  ");
         log.info("\\__   __/  ____ \\  ____ \\__   __/  __  \\(  ___  )  ____ \\ ");
         log.info("   ) (  | (    \\/ (    \\/  ) (  | (  \\  ) (   ) | (    \\/  ");
@@ -13,7 +17,7 @@ public class TestDoc {
         log.info("   | |  | (           ) |  | |  | |   ) | |   | | |        ");
         log.info("   | |  | (____/Y\\____) |  | |  | (__/  ) (___) | (____/\\  ");
         log.info("   )_(  (_______|_______)  )_(  (______/(_______)_______/  ");
-        log.info("  TestDoc - Show the world what your tests do. Version 1.1 (" + name + ")");
+        log.info("  TestDoc - Show the world what your tests do. Version 1.2 (" + name + ")");
     }
 
 }

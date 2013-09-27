@@ -14,14 +14,14 @@ public class ITFrontPageTest {
     // hentet tester fra https://www.uio.no/tjenester/it/applikasjoner/meldeapp/drift-utvikling/test/testplan.html
     @Test
     @TestDocTest("Test at vi er kommet til riktig side")
-    @TestDocTasks(@TestDocTask(task = "Gå til førstesiden", checks = "Sjekk at tittelen er riktig?"))
+    @TestDocTasks(@TestDocTask(value = "Gå til førstesiden", checks = "Sjekk at tittelen er riktig?"))
     public void testTitle() {
     }
 
 
     @Test
     @TestDocTest("Gå til søkesiden")
-    @TestDocTask(task = "Gå til søkeside", checks = "Sjekk at tittelen er riktig")
+    @TestDocTask(value = "Gå til søkeside", checks = "Sjekk at tittelen er riktig")
     public void searchForUSIT() {
         simpleSearch();
         detailsPage();
@@ -29,15 +29,15 @@ public class ITFrontPageTest {
 
 
     @TestDocTest("Ikke implementert test")
-    @TestDocTask(task = "Ikke implementert", checks = "Ikke implementert")
+    @TestDocTask(value = "Ikke implementert", checks = "Ikke implementert")
     public void testNotImplement() {
     }
 
 
     @Test
     @TestDocTest("Test enkeltøk")
-    @TestDocTasks({ @TestDocTask(task = "Gå inn på startsiden", checks = "Søkefeltet er tilgjengelig og i fokus"),
-            @TestDocTask(task = "Søk på 'USIT'", checks = { "Minst fire elementer i trefflisten", "Sjekk mer." }) })
+    @TestDocTasks({ @TestDocTask(value = "Gå inn på startsiden", checks = "Søkefeltet er tilgjengelig og i fokus"),
+            @TestDocTask(value = "Søk på 'USIT'", checks = { "Minst fire elementer i trefflisten", "Sjekk mer." }) })
     public void simpleSearch() {
     }
 
@@ -45,9 +45,9 @@ public class ITFrontPageTest {
     @Test
     @TestDocTest("Test av detaljside")
     @TestDocTasks({
-            @TestDocTask(task = "Klikk på 'cerebrum' i trefflisten", checks = "Detaljsiden kommer frem"),
-            @TestDocTask(task = "Les detaljer om personopplsyninger utleveres til andre innen UiOs nett", checks = "Det står 'Ja' og til hvem"),
-            @TestDocTask(task = "Sjekk kategorier", checks = "Det står 'studenter','ansatte' og 'andre'") })
+            @TestDocTask(value = "Klikk på 'cerebrum' i trefflisten", checks = "Detaljsiden kommer frem"),
+            @TestDocTask(value = "Les detaljer om personopplsyninger utleveres til andre innen UiOs nett", checks = "Det står 'Ja' og til hvem"),
+            @TestDocTask(value = "Sjekk kategorier", checks = "Det står 'studenter','ansatte' og 'andre'") })
     public void detailsPage() {
     }
 
@@ -55,8 +55,8 @@ public class ITFrontPageTest {
     @Test
     @TestDocTest("Test av avansert søk")
     @TestDocTasks({
-            @TestDocTask(task = "Klikk på linke 'Avansert søk'", checks = "Side for avansert søk vises"),
-            @TestDocTask(task = "Se at du er kommert til 'avansert' søkeside", checks = "Personopplysninger utleveres til andre:") })
+            @TestDocTask(value = "Klikk på linke 'Avansert søk'", checks = "Side for avansert søk vises"),
+            @TestDocTask(value = "Se at du er kommert til 'avansert' søkeside", checks = "Personopplysninger utleveres til andre:") })
     public void seeAdvancedSearchPage() {
     }
 
