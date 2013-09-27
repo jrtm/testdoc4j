@@ -13,4 +13,7 @@ public @interface TestDocPlan {
 
 
     int sortOrder() default 0;
+
+
+    String description() default "";
 }

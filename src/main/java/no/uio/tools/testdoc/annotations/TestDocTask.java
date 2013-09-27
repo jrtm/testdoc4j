@@ -10,8 +10,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD })
 public @interface TestDocTask {
+
     String task();
 
 
-    String[] checks();
+    String[] checks() default {};
 }

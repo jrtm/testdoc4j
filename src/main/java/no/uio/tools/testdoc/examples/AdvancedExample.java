@@ -1,6 +1,5 @@
 package no.uio.tools.testdoc.examples;
 
-import static junit.framework.Assert.assertTrue;
 import no.uio.tools.testdoc.annotations.TestDocPlan;
 import no.uio.tools.testdoc.annotations.TestDocTask;
 import no.uio.tools.testdoc.annotations.TestDocTasks;
@@ -22,7 +21,6 @@ public class AdvancedExample {
             @TestDocTask(task = "Fyll ut brukernavn og passord", checks = { "Det er ikke autocomplete",
                     "Login knapp virker" }) })
     public void userLogin() {
-        assertTrue(true);
     }
 
 

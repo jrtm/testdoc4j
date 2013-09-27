@@ -14,14 +14,14 @@ public class TestDocRunner {
     private boolean failIfMissingTestPlanTitle;
 
 
-    public TestDocRunner(Log log, boolean failIfMissingTestPlanTitle) {
+    public TestDocRunner(final Log log, final boolean failIfMissingTestPlanTitle) {
         this.log = log;
         this.failIfMissingTestPlanTitle = failIfMissingTestPlanTitle;
     }
 
 
     public void execute() throws ClassNotFoundException, IOException, TemplateException, MavenReportException {
-        outputTestDocBanner();
+        TestDoc.outputBanner(log, "Testrunner");
         TestDocClassLoader.loadClassesFromTargetFolder();
         List<Class<?>> classesFound = AnnotationsScanner.findAllAnnotatedClasses();
         String html = ReportGenerator.generateTestDocForClasses(classesFound, failIfMissingTestPlanTitle);
@@ -44,21 +44,7 @@ public class TestDocRunner {
     }
 
 
-    private void outputTestDocBanner() {
-        puts("________________ ______________________  _______ _______  ");
-        puts("\\__   __/  ____ \\  ____ \\__   __/  __  \\(  ___  )  ____ \\ ");
-        puts("   ) (  | (    \\/ (    \\/  ) (  | (  \\  ) (   ) | (    \\/  ");
-        puts("   | |  | (__   | (_____   | |  | |   ) | |   | | |        ");
-        puts("   | |  |  __)  (_____  )  | |  | |   | | |   | | |        ");
-        puts("   | |  | (           ) |  | |  | |   ) | |   | | |        ");
-        puts("   | |  | (____/Y\\____) |  | |  | (__/  ) (___) | (____/\\  ");
-        puts("   )_(  (_______|_______)  )_(  (______/(_______)_______/  ");
-        puts("  TestDoc - Show the world what your tests do. Version 0.2.5 (Testrunner)");
-        puts("");
-    }
-
-
-    private void puts(String string) {
+    private void puts(final String string) {
         if (log == null) {
             System.out.println(string);
         } else {

@@ -2,6 +2,7 @@ package no.uio.tools.testdoc.main;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -39,7 +40,15 @@ public class TestDocClassLoader {
             model = mavenreader.read(reader);
             model.setPomFile(pomfile);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            throw new RuntimeException("Could not read pom.xml", ex);
+        } finally {
+            try {
+                if (reader != null) {
+                    reader.close();
+                }
+            } catch (IOException e) {
+                System.err.println("Could not close file reader: " + e);
+            }
         }
         File dir = new File(System.getProperty("user.dir") + "/target/");
         if (!dir.exists()) {
@@ -56,7 +65,7 @@ public class TestDocClassLoader {
 
 
     /* Returns an array with classes and jar files we want to add to classpath when scanning for annotations */
-    private static URL[] findClassURIs(String jarDirectory) throws MalformedURLException {
+    private static URL[] findClassURIs(final String jarDirectory) throws MalformedURLException {
         File dir = new File(jarDirectory);
         List<URL> urls = new ArrayList<URL>();
 

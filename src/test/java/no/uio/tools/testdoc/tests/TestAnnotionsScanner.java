@@ -1,10 +1,14 @@
 package no.uio.tools.testdoc.tests;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
-import junit.framework.Assert;
 import no.uio.tools.testdoc.data.TestDocPlanData;
-import no.uio.tools.testdoc.examples.AdvancedExample;
+import no.uio.tools.testdoc.data.TestDocTestData;
+import no.uio.tools.testdoc.examples.CornerCaseExample;
 import no.uio.tools.testdoc.main.AnnotationsScanner;
 
 import org.apache.maven.reporting.MavenReportException;
@@ -15,31 +19,25 @@ public class TestAnnotionsScanner {
     // @Test
     public void findAnnotatedClasses() {
         List<Class<?>> annotatedClasses = AnnotationsScanner.findAllAnnotatedClasses();
-        Assert.assertEquals("Should find all annotated classes", 4, annotatedClasses.size());
+        assertEquals("Should find all annotated classes", 4, annotatedClasses.size());
     }
 
 
     @Test
     public void findTestDocTask() throws ClassNotFoundException, MavenReportException {
-        Class clazz = no.uio.tools.testdoc.examples.CornerCaseExample.class;
+        Class<?> clazz = CornerCaseExample.class;
         TestDocPlanData data = AnnotationsScanner.getAnnotationsFromClass(clazz, false);
-        System.out.println("Title       : " + data.getTests().get(0).getTitle());
-        System.out.println("Implemented : " + data.getTests().get(0).isImplemented());
+        List<TestDocTestData> tests = data.getTests();
+        assertEquals("Test with single task & check", tests.get(0).getTitle());
+        assertTrue(tests.get(0).isImplemented());
 
-        System.out.println("Title       : " + data.getTests().get(1).getTitle());
-        System.out.println("Implemented : " + data.getTests().get(1).isImplemented());
+        assertEquals("Test with many tasks & checks", tests.get(1).getTitle());
+        assertTrue(tests.get(1).isImplemented());
 
-        System.out.println("Title       : " + data.getTests().get(2).getTitle());
-        System.out.println("Implemented : " + data.getTests().get(2).isImplemented());
+        assertEquals("Ignored test", tests.get(2).getTitle());
+        assertFalse(tests.get(2).isImplemented());
 
-        // System.out.println("Title: " + (data.getTests().get(0).getTasks() == null));
+        assertEquals("Unimplemented test", tests.get(3).getTitle());
+        assertFalse(tests.get(3).isImplemented());
     }
-
-
-    @Test
-    public void testMethodOrder() throws Exception {
-        Class clazz = AdvancedExample.class;
-        TestDocPlanData data = AnnotationsScanner.getAnnotationsFromClass(clazz, false);
-    }
-
 }

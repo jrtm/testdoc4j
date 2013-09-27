@@ -2,6 +2,7 @@ package no.uio.tools.testdoc.main;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,6 +18,8 @@ import no.uio.tools.testdoc.data.TestDocTestData;
 import no.uio.tools.testdoc.util.MethodOrderComparator;
 
 import org.apache.maven.reporting.MavenReportException;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.scanners.ResourcesScanner;
@@ -71,18 +74,6 @@ public class AnnotationsScanner {
         TestDocTasks testDocTasks = method.getAnnotation(TestDocTasks.class);
         TestDocTask testDocTask = method.getAnnotation(TestDocTask.class);
 
-        // System.out.println("Method: " + method.getName());
-        // if (testDocTest != null && testDocTest.value() != null) {
-        // System.out.println("  Test : " + testDocTest.value());
-        // }
-        //
-        // if (testDocTasks != null && testDocTasks.value() != null) {
-        // System.out.println("  Tasks: " + testDocTasks.value().length);
-        // }
-        // if (testDocTask != null && testDocTask.task() != null) {
-        // System.out.println("  Task : " + testDocTask.task());
-        // }
-
         return (testDocTest != null && testDocTest.value() != null)
                 || (testDocTasks != null && testDocTasks.value() != null)
                 || (testDocTask != null && testDocTask.task() != null);
@@ -94,22 +85,23 @@ public class AnnotationsScanner {
             throws ClassNotFoundException, MavenReportException {
 
         TestDocPlanData testDocPlanData = new TestDocPlanData();
-        LinkedList<TestDocTestData> testsList = new LinkedList<TestDocTestData>();
+        List<TestDocTestData> testsList = new LinkedList<TestDocTestData>();
         TestDocPlan testdocPlan = clazz.getAnnotation(TestDocPlan.class);
 
         if (testdocPlan != null) {
             if (testdocPlan.title() != null) {
                 testDocPlanData.setTitle(testdocPlan.title());
             }
+            testDocPlanData.setDescription(testdocPlan.description());
             testDocPlanData.setSortOrder(testdocPlan.sortOrder());
-            testDocPlanData.setClassName(clazz.getName());
+            testDocPlanData.setClazz(clazz);
         } else {
             testDocPlanData.setTitle(null);
         }
 
         if (failIfMissingTestPlanTitle && (testDocPlanData.getTitle() == null || testDocPlanData.getTitle().equals(""))) {
             throw new MavenReportException("TestDoc Error: Missing tag @TestDocplan(title=...) in class "
-                    + testDocPlanData.getClassName());
+                    + testDocPlanData.getClazz());
         }
 
         int testsCount = 0;
@@ -127,11 +119,9 @@ public class AnnotationsScanner {
                 TestDocTest testDocTestAnnotations = m.getAnnotation(TestDocTest.class);
                 TestDocTasks testDocTasksAnnotations = m.getAnnotation(TestDocTasks.class);
                 TestDocTask testDocTaskAnnotations = m.getAnnotation(TestDocTask.class);
-                org.junit.Test testAnnotation = m.getAnnotation(org.junit.Test.class);
 
                 TestDocTestData testDocTestData = new TestDocTestData();
-                /* Set the implemented flag to false if method has noe @Test annotation. */
-                testDocTestData.setImplemented((testAnnotation != null));
+                testDocTestData.setImplemented(isImplemented(m));
 
                 testDocTestData.setMethodName(m.getName());
 
@@ -143,44 +133,19 @@ public class AnnotationsScanner {
                 }
 
                 /* @TestDocTasks(@TestDocTask(task = "Go to login page",check="Is there a login form?") */
-                LinkedList<TestDocTaskData> tasksLists = new LinkedList<TestDocTaskData>();
+                List<TestDocTaskData> tasksLists = new LinkedList<TestDocTaskData>();
                 if (testDocTasksAnnotations != null) {
-
-                    TestDocTask[] tasks = testDocTasksAnnotations.value();
-
-                    for (int i = 0; i < tasks.length; i++) {
-                        TestDocTaskData taskData = new TestDocTaskData();
-                        taskData.setTitle(tasks[i].task());
-                        String[] checks = tasks[i].checks();
-                        LinkedList<String> checksData = new LinkedList<String>();
-                        for (int j = 0; j < checks.length; j++) {
-                            checksData.add(checks[j]);
-                        }
-                        if (checks.length > 0) {
-                            taskData.setChecks(checksData);
-                        }
+                    for (TestDocTask task : testDocTasksAnnotations.value()) {
+                        TestDocTaskData taskData = getTaskData(task);
                         tasksLists.add(taskData);
-
                     }
-
                 }
 
                 /* If unit test has a single TestDocTask annoation, then add it to the list. */
                 // testDocTask = (TestDocTask) m.getAnnotation(TestDocTask.class);
                 if (testDocTaskAnnotations != null) {
-                    TestDocTaskData taskData = new TestDocTaskData();
-                    taskData.setTitle(testDocTaskAnnotations.task());
-
-                    String[] checks = testDocTaskAnnotations.checks();
-                    LinkedList<String> checksData = new LinkedList<String>();
-                    for (int j = 0; j < checks.length; j++) {
-                        checksData.add(checks[j]);
-                    }
-                    if (checks.length > 0) {
-                        taskData.setChecks(checksData);
-                    }
+                    TestDocTaskData taskData = getTaskData(testDocTaskAnnotations);
                     tasksLists.add(taskData);
-
                 }
 
                 if (tasksLists.size() > 0) {
@@ -190,20 +155,38 @@ public class AnnotationsScanner {
                 if (testDocTestData.getTitle() != null || testDocTestData.getTasks() != null) {
                     testsCount = testsCount + 1;
                     testDocTestData.setNumber(testsCount);
-                    testDocPlanData.setClassName(clazz.getName());
+                    testDocPlanData.setClazz(clazz);
                     testsList.add(testDocTestData);
                 }
             }
         }
         if (testsList.size() > 0) {
+            System.out.println(clazz.getName() + ": " + testsList.size() + " tests");
             sortTestDocTestData(clazz, testsList);
             testDocPlanData.setTests(testsList);
-            testDocPlanData.setClassName(clazz.getName());
+            testDocPlanData.setClazz(clazz);
         }
         if (testDocPlanData.getTitle() == null && testDocPlanData.getTests() == null) {
             return null;
         }
         return testDocPlanData;
+    }
+
+
+    private static TestDocTaskData getTaskData(final TestDocTask task) {
+        String title = task.task();
+        List<String> checks = Arrays.asList(task.checks());
+
+        TestDocTaskData taskData = new TestDocTaskData(title, checks);
+        return taskData;
+    }
+
+
+    private static boolean isImplemented(final Method m) {
+        boolean hasTestAnnotation = m.getAnnotation(Test.class) != null;
+        boolean hasIgnoreAnnotation = m.getAnnotation(Ignore.class) != null;
+
+        return hasTestAnnotation && !hasIgnoreAnnotation;
     }
 
 

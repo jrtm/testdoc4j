@@ -1,16 +1,18 @@
 package no.uio.tools.testdoc.data;
 
-import java.util.LinkedList;
+import java.util.List;
 
-public class TestDocPlanData implements Comparable {
+public class TestDocPlanData implements Comparable<TestDocPlanData> {
 
     private String title;
+    private String description;
+
     private int sortOrder;
-    private String className;
-    private LinkedList<TestDocTestData> tests;
+    private Class<?> clazz;
+    private List<TestDocTestData> tests;
 
 
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         this.title = title;
     }
 
@@ -20,27 +22,37 @@ public class TestDocPlanData implements Comparable {
     }
 
 
-    public void setTests(LinkedList<TestDocTestData> tests) {
+    public void setDescription(final String description) {
+        this.description = description;
+    }
+
+
+    public String getDescription() {
+        return description;
+    }
+
+
+    public void setTests(final List<TestDocTestData> tests) {
         this.tests = tests;
     }
 
 
-    public LinkedList<TestDocTestData> getTests() {
+    public List<TestDocTestData> getTests() {
         return tests;
     }
 
 
-    public void setClassName(String className) {
-        this.className = className;
+    public void setClazz(final Class<?> className) {
+        this.clazz = className;
     }
 
 
-    public String getClassName() {
-        return className;
+    public Class<?> getClazz() {
+        return clazz;
     }
 
 
-    public void setSortOrder(int sortOrder) {
+    public void setSortOrder(final int sortOrder) {
         this.sortOrder = sortOrder;
     }
 
@@ -50,8 +62,8 @@ public class TestDocPlanData implements Comparable {
     }
 
 
-    public int compareTo(Object o) {
-        TestDocPlanData other = (TestDocPlanData) o;
+    @Override
+    public int compareTo(final TestDocPlanData other) {
         return this.sortOrder - other.getSortOrder();
     }
 

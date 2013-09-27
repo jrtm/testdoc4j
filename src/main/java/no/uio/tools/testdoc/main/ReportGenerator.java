@@ -30,23 +30,23 @@ public class ReportGenerator {
     public static boolean debug = false;
 
 
-    public static String generateTestDocForClasses(List<Class<?>> classes, boolean failIfMissingTestPlanTitle)
-            throws ClassNotFoundException, IOException, TemplateException, MavenReportException {
-        HashMap<String, LinkedList<TestDocPlanData>> datamodel = scanClasses(classes, failIfMissingTestPlanTitle);
+    public static String generateTestDocForClasses(final List<Class<?>> classes,
+            final boolean failIfMissingTestPlanTitle) throws ClassNotFoundException, IOException, TemplateException,
+            MavenReportException {
+        HashMap<String, List<TestDocPlanData>> datamodel = scanClasses(classes, failIfMissingTestPlanTitle);
         String output = processFreemarkerTemplate(datamodel, "testdoc.ftl");
         return output;
     }
 
 
-    @SuppressWarnings("rawtypes")
-    public static HashMap<String, LinkedList<TestDocPlanData>> scanClasses(List classes,
-            boolean failIfMissingTestPlanTitle) throws ClassNotFoundException, IOException, MavenReportException {
+    public static HashMap<String, List<TestDocPlanData>> scanClasses(final List<Class<?>> classes,
+            final boolean failIfMissingTestPlanTitle) throws ClassNotFoundException, IOException, MavenReportException {
 
-        HashMap<String, LinkedList<TestDocPlanData>> datamodel = new HashMap<String, LinkedList<TestDocPlanData>>();
-        LinkedList<TestDocPlanData> testplans = new LinkedList<TestDocPlanData>();
+        HashMap<String, List<TestDocPlanData>> datamodel = new HashMap<String, List<TestDocPlanData>>();
+        List<TestDocPlanData> testplans = new LinkedList<TestDocPlanData>();
 
-        for (Iterator<Class> iterator = classes.iterator(); iterator.hasNext();) {
-            Class clazz = (Class) iterator.next();
+        for (Iterator<Class<?>> iterator = classes.iterator(); iterator.hasNext();) {
+            Class<?> clazz = iterator.next();
             String className = clazz.getName();
             if (debug == true) {
                 System.out.println("TestDoc: Scanning: " + className);
@@ -61,9 +61,19 @@ public class ReportGenerator {
             }
         }
 
-        Collections.sort(testplans);
+        sortAndNormalizeTestPlans(testplans);
+
         datamodel.put("testplans", testplans);
         return datamodel;
+    }
+
+
+    private static void sortAndNormalizeTestPlans(final List<TestDocPlanData> testplans) {
+        Collections.sort(testplans);
+        int num = 0;
+        for (TestDocPlanData plan : testplans) {
+            plan.setSortOrder(++num);
+        }
     }
 
 
@@ -76,8 +86,8 @@ public class ReportGenerator {
      * @throws IOException
      * @throws TemplateException
      */
-    private static String processFreemarkerTemplate(HashMap<String, LinkedList<TestDocPlanData>> datamodel,
-            String template) throws IOException, TemplateException {
+    private static String processFreemarkerTemplate(final HashMap<String, List<TestDocPlanData>> datamodel,
+            final String template) throws IOException, TemplateException {
         StringWriter output = new StringWriter();
 
         Configuration cfg = new Configuration();
@@ -97,7 +107,7 @@ public class ReportGenerator {
     }
 
 
-    public static void writeFile(String filename, String data) {
+    public static void writeFile(final String filename, final String data) {
         try {
             BufferedWriter out = new BufferedWriter(new FileWriter(filename));
             out.write(data);
@@ -109,7 +119,7 @@ public class ReportGenerator {
 
 
     /* Reads text file from jar archive. Used to read template files. */
-    public static String readTextResource(String s) {
+    public static String readTextResource(final String s) {
         InputStream is = null;
         BufferedReader br = null;
         String line;
@@ -134,9 +144,9 @@ public class ReportGenerator {
             }
         }
         String retVal = "";
-        Iterator it = list.iterator();
+        Iterator<String> it = list.iterator();
         while (it.hasNext()) {
-            retVal = retVal + (String) it.next();
+            retVal = retVal + it.next();
 
         }
         return retVal;
