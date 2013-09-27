@@ -4,6 +4,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 import no.uio.tools.testdoc.data.TestDocPlanData;
+import no.uio.tools.testdoc.examples.AdvancedExample;
 import no.uio.tools.testdoc.main.AnnotationsScanner;
 
 import org.apache.maven.reporting.MavenReportException;
@@ -32,6 +33,13 @@ public class TestAnnotionsScanner {
         System.out.println("Implemented : " + data.getTests().get(2).isImplemented());
 
         // System.out.println("Title: " + (data.getTests().get(0).getTasks() == null));
+    }
+
+
+    @Test
+    public void testMethodOrder() throws Exception {
+        Class clazz = AdvancedExample.class;
+        TestDocPlanData data = AnnotationsScanner.getAnnotationsFromClass(clazz, false);
     }
 
 }

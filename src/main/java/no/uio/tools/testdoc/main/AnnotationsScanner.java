@@ -2,6 +2,7 @@ package no.uio.tools.testdoc.main;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -13,6 +14,7 @@ import no.uio.tools.testdoc.annotations.TestDocTest;
 import no.uio.tools.testdoc.data.TestDocPlanData;
 import no.uio.tools.testdoc.data.TestDocTaskData;
 import no.uio.tools.testdoc.data.TestDocTestData;
+import no.uio.tools.testdoc.util.MethodOrderComparator;
 
 import org.apache.maven.reporting.MavenReportException;
 import org.reflections.Reflections;
@@ -38,7 +40,8 @@ public class AnnotationsScanner {
     }
 
 
-    private static void findClassesAnnotatedWithTestDocPlan(Reflections reflections, List<Class<?>> annotatedClasses) {
+    private static void findClassesAnnotatedWithTestDocPlan(final Reflections reflections,
+            final List<Class<?>> annotatedClasses) {
         Set<Class<?>> annotated = reflections.getTypesAnnotatedWith(no.uio.tools.testdoc.annotations.TestDocPlan.class);
         for (Class<?> clazz : annotated) {
             if (!annotatedClasses.contains(clazz)) {
@@ -48,7 +51,7 @@ public class AnnotationsScanner {
     }
 
 
-    private static List<Class<?>> findClassesAnnotatedWithTestDocTest(Reflections reflections) {
+    private static List<Class<?>> findClassesAnnotatedWithTestDocTest(final Reflections reflections) {
         Set<Method> annotatedMethods = reflections
                 .getMethodsAnnotatedWith(no.uio.tools.testdoc.annotations.TestDocTest.class);
 
@@ -63,10 +66,10 @@ public class AnnotationsScanner {
     }
 
 
-    private static boolean hasTestDocAnnotations(Method method) {
-        TestDocTest testDocTest = (TestDocTest) method.getAnnotation(TestDocTest.class);
-        TestDocTasks testDocTasks = (TestDocTasks) method.getAnnotation(TestDocTasks.class);
-        TestDocTask testDocTask = (TestDocTask) method.getAnnotation(TestDocTask.class);
+    private static boolean hasTestDocAnnotations(final Method method) {
+        TestDocTest testDocTest = method.getAnnotation(TestDocTest.class);
+        TestDocTasks testDocTasks = method.getAnnotation(TestDocTasks.class);
+        TestDocTask testDocTask = method.getAnnotation(TestDocTask.class);
 
         // System.out.println("Method: " + method.getName());
         // if (testDocTest != null && testDocTest.value() != null) {
@@ -87,12 +90,12 @@ public class AnnotationsScanner {
 
 
     /* Read annotations from a class and return data objects. */
-    public static TestDocPlanData getAnnotationsFromClass(Class<?> clazz, boolean failIfMissingTestPlanTitle)
+    public static TestDocPlanData getAnnotationsFromClass(final Class<?> clazz, final boolean failIfMissingTestPlanTitle)
             throws ClassNotFoundException, MavenReportException {
 
         TestDocPlanData testDocPlanData = new TestDocPlanData();
         LinkedList<TestDocTestData> testsList = new LinkedList<TestDocTestData>();
-        TestDocPlan testdocPlan = (TestDocPlan) clazz.getAnnotation(TestDocPlan.class);
+        TestDocPlan testdocPlan = clazz.getAnnotation(TestDocPlan.class);
 
         if (testdocPlan != null) {
             if (testdocPlan.title() != null) {
@@ -121,14 +124,16 @@ public class AnnotationsScanner {
 
             if (hasTestDocAnnotations(m)) {
 
-                TestDocTest testDocTestAnnotations = (TestDocTest) m.getAnnotation(TestDocTest.class);
-                TestDocTasks testDocTasksAnnotations = (TestDocTasks) m.getAnnotation(TestDocTasks.class);
-                TestDocTask testDocTaskAnnotations = (TestDocTask) m.getAnnotation(TestDocTask.class);
-                org.junit.Test testAnnotation = (org.junit.Test) m.getAnnotation(org.junit.Test.class);
+                TestDocTest testDocTestAnnotations = m.getAnnotation(TestDocTest.class);
+                TestDocTasks testDocTasksAnnotations = m.getAnnotation(TestDocTasks.class);
+                TestDocTask testDocTaskAnnotations = m.getAnnotation(TestDocTask.class);
+                org.junit.Test testAnnotation = m.getAnnotation(org.junit.Test.class);
 
                 TestDocTestData testDocTestData = new TestDocTestData();
                 /* Set the implemented flag to false if method has noe @Test annotation. */
                 testDocTestData.setImplemented((testAnnotation != null));
+
+                testDocTestData.setMethodName(m.getName());
 
                 /* Example: @TestDocTest("Test login page") */
                 if (testDocTestAnnotations != null) {
@@ -141,7 +146,7 @@ public class AnnotationsScanner {
                 LinkedList<TestDocTaskData> tasksLists = new LinkedList<TestDocTaskData>();
                 if (testDocTasksAnnotations != null) {
 
-                    TestDocTask[] tasks = (TestDocTask[]) testDocTasksAnnotations.value();
+                    TestDocTask[] tasks = testDocTasksAnnotations.value();
 
                     for (int i = 0; i < tasks.length; i++) {
                         TestDocTaskData taskData = new TestDocTaskData();
@@ -191,6 +196,7 @@ public class AnnotationsScanner {
             }
         }
         if (testsList.size() > 0) {
+            sortTestDocTestData(clazz, testsList);
             testDocPlanData.setTests(testsList);
             testDocPlanData.setClassName(clazz.getName());
         }
@@ -198,5 +204,16 @@ public class AnnotationsScanner {
             return null;
         }
         return testDocPlanData;
+    }
+
+
+    private static void sortTestDocTestData(final Class<?> clazz, final List<TestDocTestData> testDataList) {
+        MethodOrderComparator<TestDocTestData> comparator = new MethodOrderComparator<TestDocTestData>(clazz);
+        Collections.sort(testDataList, comparator);
+
+        int testNumber = 0;
+        for (TestDocTestData testData : testDataList) {
+            testData.setNumber(++testNumber);
+        }
     }
 }

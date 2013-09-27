@@ -3,11 +3,15 @@ package no.uio.tools.testdoc.data;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public class TestDocTestData {
+import no.uio.tools.testdoc.util.MethodWrapper;
+
+public class TestDocTestData implements MethodWrapper {
 
     private String title;
     private int number;
     private boolean implemented;
+
+    private String methodName;
 
 
     public boolean isImplemented() {
@@ -15,14 +19,14 @@ public class TestDocTestData {
     }
 
 
-    public void setImplemented(boolean implemented) {
+    public void setImplemented(final boolean implemented) {
         this.implemented = implemented;
     }
 
     private LinkedList<TestDocTaskData> tasks;
 
 
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         this.title = title;
     }
 
@@ -32,7 +36,7 @@ public class TestDocTestData {
     }
 
 
-    public void setTasks(LinkedList<TestDocTaskData> tasks) {
+    public void setTasks(final LinkedList<TestDocTaskData> tasks) {
         this.tasks = tasks;
     }
 
@@ -42,13 +46,23 @@ public class TestDocTestData {
     }
 
 
-    public void setNumber(int number) {
+    public void setNumber(final int number) {
         this.number = number;
     }
 
 
     public int getNumber() {
         return number;
+    }
+
+
+    public String getMethodName() {
+        return methodName;
+    }
+
+
+    public void setMethodName(final String methodName) {
+        this.methodName = methodName;
     }
 
 
