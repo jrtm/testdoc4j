@@ -22,7 +22,7 @@ Add TestDoc annotations to your tests with to dthat describes in plain text what
     public class BasicExample {
 
       @TestDocTest("Test user login")
-      @TestDocTasks({ @TestDocTask(task = "Go to login page", checks = "Login form should be visible") })
+      @TestDocTasks({ @TestDocTask(value = "Go to login page", checks = "Login form should be visible") })
       public void testUserLogin() {
           // Testcode here
           page = new LoginPage();
@@ -45,7 +45,7 @@ Add TestDoc to your pom.xml file.
       <plugin>
         <groupId>no.uio.tools</groupId>
         <artifactId>testdoc</artifactId>
-        <version>0.0.2</version>
+        <version>1.2-SNAPSHOT</version>
         <configuration>
           <forceTestPlanTitle>true</forceTestPlanTitle><!-- optional setting -->
         </configuration>
@@ -63,7 +63,7 @@ Run maven site.
 ```
     $ mvn site
     ...
-    [INFO] Generating "TestDoc" report    --- testdoc:0.0.2
+    [INFO] Generating "TestDoc" report    --- testdoc:1.2
     [INFO] ________________ ______________________  _______ _______
     [INFO] \__   __/  ____ \  ____ \__   __/  __  \(  ___  )  ____ \
     [INFO]    ) (  | (    \/ (    \/  ) (  | (  \  ) (   ) | (    \/
@@ -72,7 +72,7 @@ Run maven site.
     [INFO]    | |  | (           ) |  | |  | |   ) | |   | | |
     [INFO]    | |  | (____/Y\____) |  | |  | (__/  ) (___) | (____/\
     [INFO]    )_(  (_______|_______)  )_(  (______/(_______)_______/
-    [INFO]   TestDoc - Show the world what your tests do. Version 0.2.
+    [INFO]   TestDoc - Show the world what your tests do. Version 1.2.
 
 ```
 
